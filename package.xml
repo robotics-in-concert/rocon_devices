@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>hue_controller</name>
+  <version>0.1.0</version>
+  <description>The hue_controller package</description>
+  <maintainer email="dwlee@yujinrobot.com">dwlee</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <run_depend>python-rospkg</run_depend>
+  <run_depend>rospy</run_depend>
+
+  <export>
+  </export>
+</package>
