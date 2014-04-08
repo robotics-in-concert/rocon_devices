@@ -6,6 +6,6 @@ from catkin_pkg.python_setup import generate_distutils_setup
 d = generate_distutils_setup(
     packages=['hue_controller'],
     package_dir={'': 'src'},
-    scripts=['scripts/test.py'],
+    scripts=['scripts'],
 )
 setup(**d)
