@@ -1,23 +1,8 @@
 #!/usr/bin/python
-
-
-"""
-#from hue_controller import Bridge
-from hue_controller import Bridge
+#sys
 import random
 
-b = Bridge() # Enter bridge IP here.
-
-#If running for the first time, press button on bridge and run with b.connect() uncommented
-#b.connect()
-
-lights = b.get_light_objects()
-
-for light in lights:
-light.brightness = 254
-light.xy = [random.random(),random.random()]
-"""
-import random
+#ros
 import rospy
 from hue_controller.msg import HueState
 from hue_controller.msg import Hue
@@ -25,9 +10,9 @@ from hue_controller.msg import HueArray
 
 
 class RandomColor():
-	def __init__(self):
-		print "Random Hue"
-		rospy.init_node("random_color")
+    def __init__(self):
+       print "Random Hue"
+       rospy.init_node("random_color")
 		self.hue_color_on_publisher = rospy.Publisher("/set_hue_color_on", Hue)
 		self.hue_color_xy_publisher = rospy.Publisher("/set_hue_color_xy", Hue)
 		self.hue_color_hsv_publisher = rospy.Publisher("/set_hue_color_hsv", Hue)
@@ -89,4 +74,3 @@ class RandomColor():
 if __name__ == '__main__':
 	random_color = RandomColor()
 	random_color.spin()
-	
