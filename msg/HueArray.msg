@@ -1,1 +1,1 @@
-hue_controller/Hue [] hue_list
+hue_controller/Hue[] hue_list
