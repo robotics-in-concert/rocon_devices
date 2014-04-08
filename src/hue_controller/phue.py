@@ -48,6 +48,9 @@ class PhueException(Exception):
 
 
 class PhueRegistrationException(PhueException):
+    def __init__(self, id, message):
+        self.id = id
+        self.message = message
     pass
 
 
@@ -74,7 +77,7 @@ class Light(object):
         self._alert = None
         self.transitiontime = None  # default
         self._reset_bri_after_on = None
-        self._reachable = False #default
+        self._reachable = False  # default
 
     def __repr__(self):
         # like default python repr function, but add light name
@@ -421,10 +424,11 @@ class Bridge(object):
             self.config_file_path = os.path.join(os.getcwd(), '.python_hue')
 
         self.ip = ip
-        self.username = username
+        self.username = "newdeveloper"
         self.lights_by_id = {}
         self.lights_by_name = {}
         self._name = None
+        self.is_connect = False
 
         # self.minutes = 600 # these do not seem to be used anywhere?
         # self.seconds = 10
@@ -439,7 +443,7 @@ class Bridge(object):
         return self._name
 
     @name.setter
-    def set_name(self, value):
+    def name(self, value):
         self._name = value
         data = {'name': self._name}
         self.request(
@@ -500,18 +504,12 @@ class Bridge(object):
 
     def register_app(self):
         """ Register this computer with the Hue bridge hardware and save the resulting access token """
-        registration_request = {"devicetype": "python_hue"}
+        registration_request = {"devicetype": "ros_hue","username":self.username}
         data = json.dumps(registration_request)
         response = self.request('POST', '/api', data)
         for line in response:
             for key in line:
-                if 'success' in key:
-                    with open(self.config_file_path, 'w') as f:
-                        logger.info(
-                            'Writing configuration file to ' + self.config_file_path)
-                        f.write(json.dumps({self.ip: line['success']}))
-                        logger.info('Reconnecting to the bridge')
-                    self.connect()
+                print key
                 if 'error' in key:
                     error_type = line['error']['type']
                     if error_type == 101:
@@ -521,6 +519,22 @@ class Bridge(object):
                         raise PhueException(error_type,
                                             'Unknown username')
 
+    def check_user_validation(self):
+        response = self.request('GET', '/api' + self.username)
+        for line in response:
+            for key in line:
+                if 'success' in key:
+                    return
+                if 'error' in key:
+                    error_type = line['error']['type']
+                    if error_type == 101:
+                        raise PhueRegistrationException(error_type,
+                                                        'The link button has not been pressed in the last 30 seconds.')
+                    if error_type == 7:
+                        raise PhueException(error_type, 'Unknown username')
+                    if error_type == 1:
+                        raise PhueException(error_type, 'unauthorized user')
+
     def connect(self):
         """ Connect to the Hue bridge """
         logger.info('Attempting to connect to the bridge...')
@@ -528,27 +542,11 @@ class Bridge(object):
         if self.ip is not None and self.username is not None:
             logger.info('Using ip: ' + self.ip)
             logger.info('Using username: ' + self.username)
-            return
-
-        if self.ip is None or self.username is None:
             try:
-                with open(self.config_file_path) as f:
-                    config = json.loads(f.read())
-                    if self.ip is None:
-                        self.ip = list(config.keys())[0]
-                        logger.info('Using ip from config: ' + self.ip)
-                    else:
-                        logger.info('Using ip: ' + self.ip)
-                    if self.username is None:
-                        self.username = config[self.ip]['username']
-                        logger.info(
-                            'Using username from config: ' + self.username)
-                    else:
-                        logger.info('Using username: ' + self.username)
+                self.check_user_validation()
             except Exception as e:
-                logger.info(
-                    'Error opening config file, will attempt bridge registration')
                 self.register_app()
+
 
     def get_light_id_by_name(self, name):
         """ Lookup a light id based on string name. Case-sensitive. """
@@ -568,6 +566,7 @@ class Bridge(object):
         Set mode='id' for a dict by light ID, or mode='name' for a dict by light name.   """
         if self.lights_by_id == {}:
             lights = self.request('GET', '/api/' + self.username + '/lights/')
+
             for light in lights:
                 self.lights_by_id[int(light)] = Light(self, int(light))
                 self.lights_by_name[lights[light][

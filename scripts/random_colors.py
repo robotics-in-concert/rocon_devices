@@ -4,15 +4,13 @@ import random
 
 #ros
 import rospy
-from hue_controller.msg import HueState
-from hue_controller.msg import Hue
-from hue_controller.msg import HueArray
+from hue_controller.msg import HueState, Hue, HueArray
 
 
 class RandomColor():
-    def __init__(self):
-       print "Random Hue"
-       rospy.init_node("random_color")
+	def __init__(self):
+		print "Random Hue"
+		rospy.init_node("random_color")
 		self.hue_color_on_publisher = rospy.Publisher("/set_hue_color_on", Hue)
 		self.hue_color_xy_publisher = rospy.Publisher("/set_hue_color_xy", Hue)
 		self.hue_color_hsv_publisher = rospy.Publisher("/set_hue_color_hsv", Hue)
@@ -27,6 +25,7 @@ class RandomColor():
 	
 	def spin(self):
 		while not rospy.is_shutdown():
+			print "spinning"
 			for hue in self.hue_list:
 				on = random.randint(0,1)
 				if on:
