@@ -18,6 +18,7 @@ import json
 import os
 import platform
 import sys
+from exceptions import * 
 if sys.version_info[0] > 2:
     PY3K = True
 else:
@@ -38,20 +39,6 @@ else:
     USER_HOME = 'HOME'
 
 __version__ = '0.8'
-
-
-class PhueException(Exception):
-
-    def __init__(self, id, message):
-        self.id = id
-        self.message = message
-
-
-class PhueRegistrationException(PhueException):
-    def __init__(self, id, message):
-        self.id = id
-        self.message = message
-    pass
 
 
 class Light(object):
@@ -509,7 +496,6 @@ class Bridge(object):
         response = self.request('POST', '/api', data)
         for line in response:
             for key in line:
-                print key
                 if 'error' in key:
                     error_type = line['error']['type']
                     if error_type == 101:

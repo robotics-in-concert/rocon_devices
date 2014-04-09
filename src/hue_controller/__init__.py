@@ -5,3 +5,4 @@
 #
 
 from .phue import *
+from .exceptions import *

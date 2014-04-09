@@ -9,14 +9,15 @@ import rospy
 from hue_controller.msg import HueState, Hue, HueArray
 
 #phue
-import hue_controller
+from hue_controller import Bridge
+from hue_controller import PhueRegistrationException, PhueException
 
 
 class RosHue():
     def __init__(self):
         self.name = 'ros_hue'
 
-        self.bridge = hue_controller.Bridge()
+        self.bridge = Bridge()
 
         self.ip = self.bridge.get_ip_address(set_result=True)
         self.bridge.set_ip_address(self.ip)
@@ -39,17 +40,18 @@ class RosHue():
                 if not self.bridge.is_connect:
                     try:
                         self.bridge.connect()
-                    except hue_controller.PhueRegistrationException as e:
-                        print e.message
-                    except hue_controller.PhueException as e:
-                        print e.message
+                    except PhueRegistrationException as e:
+                        rospy.logwarn(e.message)
+                    except PhueException as e:
+                        rospy.logwarn(e.message)
                     else:
+                        rospy.loginfo("bridge connect")
                         self.bridge.is_connect = True
                 else:
                     self.bulb_checker()
             else:
                 self.bridge.is_connect = False
-                print "ping not connection"
+                rospy.loginfo("bridge not connect")
                 pass
             rospy.sleep(1)
 
@@ -60,13 +62,13 @@ class RosHue():
         try:
             urlopen(url, timeout=time_out)
         except HTTPError, e:
-            print 'The server couldn\'t fulfill the request. Reason:', str(e.code)
+            rospy.logwarn('The server can not fulfill the request. Reason: %s' % str(e.code))
             return False
         except URLError, e:
-            print 'We failed to reach a server. Reason:', str(e.reason)
+            rospy.logwarn('We failed to reach a server. Reason: %s' % str(e.reason))
             return False
         except socket.timeout, e:
-            print 'We failed socket timeout. Reason:', str(e)
+            rospy.logwarn('We failed socket timeout. Reason: %s' % str(e))
             return False
         else:
             return True
@@ -90,43 +92,47 @@ class RosHue():
                 self.hue_list_publisher.publish(hues)
 
     def set_hue_color_on(self, data):
-        state = {}
-        state["on"] = data.state.on
-        self.bridge.set_light([data.light_id], state)
+        if self.bridge.is_connect:
+            state = {}
+            state["on"] = data.state.on
+            self.bridge.set_light([data.light_id], state)
 
     def set_hue_color_xy(self, data):
-        state = {}
-        state["xy"] = data.state.xy
-        self.bridge.set_light([data.light_id], state)
+        if self.bridge.is_connect:
+            state = {}
+            state["xy"] = data.state.xy
+            self.bridge.set_light([data.light_id], state)
 
     def set_hue_color_hsv(self, data):
-        state = {}
-        state["hue"] = data.state.hue
-        state["bri"] = data.state.bri
-        state["sat"] = data.state.sat
-        self.bridge.set_light([data.light_id], state)
+        if self.bridge.is_connect:
+            state = {}
+            state["hue"] = data.state.hue
+            state["bri"] = data.state.bri
+            state["sat"] = data.state.sat
+            self.bridge.set_light([data.light_id], state)
 
     def set_hue_color_ct(self, data):
-        state = {}
-        state["ct"] = data.state.ct
-        self.bridge.set_light([data.light_id], state)
+        if self.bridge.is_connect:
+            state = {}
+            state["ct"] = data.state.ct
+            self.bridge.set_light([data.light_id], state)
 
     def set_hue_color_mode(self, data):
-        state = {}
-        if data.state.mode == HueState().NONE:
-            state["alert"] = data.state.mode
-            state["effect"] = data.state.mode
-        elif data.state.mode == HueState().COLOR_LOOP:
-            state["alert"] = data.state.NONE
-            state["effect"] = data.state.mode
-        elif data.state.mode == HueState().SELECT or data.state.mode == HueState().LSELECT:
-            state["alert"] = data.state.mode
-            state["effect"] = data.state.NONE
-        else:
-            state["alert"] = data.state.mode
-            state["effect"] = data.state.mode
-        print state
-        self.bridge.set_light([data.light_id], state)
+        if self.bridge.is_connect:
+            state = {}
+            if data.state.mode == HueState().NONE:
+                state["alert"] = data.state.mode
+                state["effect"] = data.state.mode
+            elif data.state.mode == HueState().COLOR_LOOP:
+                state["alert"] = data.state.NONE
+                state["effect"] = data.state.mode
+            elif data.state.mode == HueState().SELECT or data.state.mode == HueState().LSELECT:
+                state["alert"] = data.state.mode
+                state["effect"] = data.state.NONE
+            else:
+                state["alert"] = data.state.mode
+                state["effect"] = data.state.mode
+            self.bridge.set_light([data.light_id], state)
 
     def spin(self):
         while not rospy.is_shutdown():

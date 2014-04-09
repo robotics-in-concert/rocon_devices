@@ -7,7 +7,7 @@ import rospy
 from hue_controller.msg import HueState, Hue, HueArray
 
 
-class RandomColor():
+class Test():
 	def __init__(self):
 		print "Random Hue"
 		rospy.init_node("random_color")
@@ -25,7 +25,6 @@ class RandomColor():
 	
 	def spin(self):
 		while not rospy.is_shutdown():
-			print "spinning"
 			for hue in self.hue_list:
 				on = random.randint(0,1)
 				if on:
