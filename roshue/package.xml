@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <name>roshue</name>
+  <version>0.1.0</version>
+  <description>The roshue package</description>
+  <maintainer email="dwlee@yujinrobot.com">dwlee</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <run_depend>python-rospkg</run_depend>
+  <run_depend>rospy</run_depend>
+  <build_depend>message_generation</build_depend>
+  <run_depend>message_runtime</run_depend>
+
+  <export>
+  </export>
+</package>
