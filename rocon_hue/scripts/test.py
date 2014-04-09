@@ -9,7 +9,7 @@ import random
 
 #ros
 import rospy
-from roshue.msg import HueState, Hue, HueArray
+from rocon_hue.msg import HueState, Hue, HueArray
 
 
 class Test():

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>roshue</name>
+  <name>rocon_hue</name>
   <version>0.1.0</version>
-  <description>The roshue package</description>
+  <description>The rocon_hue package</description>
   
   <maintainer email="dwlee@yujinrobot.com">dwlee</maintainer>
   <author>DongWook Lee</author>

@@ -12,14 +12,14 @@ from urllib2 import urlopen, URLError, HTTPError
 
 #ros
 import rospy
-from roshue.msg import HueState, Hue, HueArray
+from rocon_hue.msg import HueState, Hue, HueArray
 
 #phue
-from roshue import Bridge
-from roshue import PhueRegistrationException, PhueException
+from rocon_hue import Bridge
+from rocon_hue import PhueRegistrationException, PhueException
 
 
-class RosHue():
+class Rocon_Hue():
     def __init__(self):
         self.name = 'ros_hue'
 
@@ -151,5 +151,5 @@ class RosHue():
 
 
 if __name__ == '__main__':
-    rh = RosHue()
+    rh = Rocon_Hue()
     rh.spin()
