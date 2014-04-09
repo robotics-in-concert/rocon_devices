@@ -23,12 +23,12 @@ class RosHue():
         self.bridge.set_ip_address(self.ip)
 
         rospy.init_node(self.name)
-        self.hue_list_publisher = rospy.Publisher("/hue_list", HueArray, latch=False)
-        rospy.Subscriber('/set_hue_color_on', Hue, self.set_hue_color_on)
-        rospy.Subscriber('/set_hue_color_xy', Hue, self.set_hue_color_xy)
-        rospy.Subscriber('/set_hue_color_hsv', Hue, self.set_hue_color_hsv)
-        rospy.Subscriber('/set_hue_color_ct', Hue, self.set_hue_color_ct)
-        rospy.Subscriber('/set_hue_color_mode', Hue, self.set_hue_color_mode)
+        self.hue_list_publisher = rospy.Publisher("hue_list", HueArray, latch=False)
+        rospy.Subscriber('set_hue_color_on', Hue, self.set_hue_color_on)
+        rospy.Subscriber('set_hue_color_xy', Hue, self.set_hue_color_xy)
+        rospy.Subscriber('set_hue_color_hsv', Hue, self.set_hue_color_hsv)
+        rospy.Subscriber('set_hue_color_ct', Hue, self.set_hue_color_ct)
+        rospy.Subscriber('set_hue_color_mode', Hue, self.set_hue_color_mode)
 
         self.checker_th = threading.Thread(target=self.hue_checker)
         self.is_checking = True
