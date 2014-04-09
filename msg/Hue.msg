@@ -3,5 +3,5 @@ string type
 string name
 string modelid
 string swvesion
-hue_controller/HueState state
+roshue/HueState state
 

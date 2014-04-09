@@ -6,11 +6,11 @@ from urllib2 import urlopen, URLError, HTTPError
 
 #ros
 import rospy
-from hue_controller.msg import HueState, Hue, HueArray
+from roshue.msg import HueState, Hue, HueArray
 
 #phue
-from hue_controller import Bridge
-from hue_controller import PhueRegistrationException, PhueException
+from roshue import Bridge
+from roshue import PhueRegistrationException, PhueException
 
 
 class RosHue():

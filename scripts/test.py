@@ -4,7 +4,7 @@ import random
 
 #ros
 import rospy
-from hue_controller.msg import HueState, Hue, HueArray
+from roshue.msg import HueState, Hue, HueArray
 
 
 class Test():
