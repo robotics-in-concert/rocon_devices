@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <name>rocon_devices</name>
+  <version>0.1.0</version>
+  <description>
+    rocon devices meta package
+  </description>
+  <maintainer email="dwlee@yujinrobot.com">DongWook Lee</maintainer>
+  <license>BSD</license>
+  
+  <url type="website"></url>
+  <url type="repository">https://github.com/robotics-in-concert/rocon_devices</url>
+  <url type="bugtracker">https://github.com/robotics-in-concert/rocon_devices/issues</url>
+  <author email="dwlee@yujinrobot.com">DongWook Lee</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <export>
+    <metapackage/>
+  </export>
+</package>
+
