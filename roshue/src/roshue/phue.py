@@ -12,6 +12,12 @@ Published under the GWTFPL - http://www.wtfpl.net
 "Hue Personal Wireless Lighting" is a trademark owned by Koninklijke Philips Electronics N.V., see www.meethue.com for more information.
 I am in no way affiliated with the Philips organization.
 
+Modification by dwlee
+- Create the exception.py and move the exception class
+- Add the "reachable" flag.
+    Possible to get the each bulb validation.
+- Connection method change.
+    No more use the user name. The user name is pre-define to "newdeveloper". It has the all permission of hue restapi.
 '''
 
 import json
