@@ -12,7 +12,7 @@ from urllib2 import urlopen, URLError, HTTPError
 
 #ros
 import rospy
-from rocon_hue.msg import HueState, Hue, HueArray
+from rocon_devices_msgs.msg import HueState, Hue, HueArray
 
 #phue
 from rocon_hue import Bridge
