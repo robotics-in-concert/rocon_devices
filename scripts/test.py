@@ -70,5 +70,5 @@ class Test():
 			rospy.sleep(3.0)
 
 if __name__ == '__main__':
-	random_color = RandomColor()
-	random_color.spin()
+	test = Test()
+	test.spin()
