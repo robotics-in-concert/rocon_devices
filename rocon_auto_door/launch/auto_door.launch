@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="rocon_auto_door" type="auto_door.py" name="rocon_auto_door">
+    <param name="arduino_ip" value="192.168.10.227"/>
+    <param name="door_ctrl_io_port" value="13"/>
+  </node>
+</launch>

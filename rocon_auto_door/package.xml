@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>rocon_auto_door</name>
+  <version>0.0.0</version>
+  <description>Automatic door control for ROCON</description>
+  <author>Marcus Liebhardt</author>
+  <maintainer email="marcus.liebhardt@yujinrobot.com">Marcus Liebhardt</maintainer>
+  <license>Yujin</license>
+  <url type="bugtracker">https://github.com/robotics-in-concert/rocon_devices/issues</url>
+  <url type="repository">https://github.com/robotics-in-concert/rocon_devices</url>
+  <url type="website">http://wiki.ros.org/rocon_auto_door</url>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>python-requests</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+</package>
