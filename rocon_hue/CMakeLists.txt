@@ -11,6 +11,7 @@ project(rocon_hue)
 find_package(catkin REQUIRED COMPONENTS
     roslint)
 
+catkin_package()
 catkin_python_setup()
 
 file(GLOB_RECURSE ${PROJECT_NAME}_MODULE_SOURCES RELATIVE ${PROJECT_SOURCE_DIR} src/*.py)
@@ -20,3 +21,8 @@ roslint_python(${${PROJECT_NAME}_MODULE_SOURCES} ${${PROJECT_NAME}_SCRIPT_SOURCE
 ##############################################################################
 # Installs
 ##############################################################################
+install(
+    PROGRAMS 
+        scripts/rocon_hue_bridge.py
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    )
