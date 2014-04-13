@@ -497,7 +497,7 @@ class Bridge(object):
 
     def register_app(self):
         """ Register this computer with the Hue bridge hardware and save the resulting access token """
-        registration_request = {"devicetype": "ros_hue","username":self.username}
+        registration_request = {"devicetype": "rocon_hue","username":self.username}
         data = json.dumps(registration_request)
         response = self.request('POST', '/api', data)
         for line in response:

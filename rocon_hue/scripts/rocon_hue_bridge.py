@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+#
+# License: BSD
+#   https://raw.github.com/robotics-in-concert/rocon_devices/license/LICENSE
+#
+#################################################################################
+
 #sys
 import threading
 import socket
@@ -6,14 +12,14 @@ from urllib2 import urlopen, URLError, HTTPError
 
 #ros
 import rospy
-from roshue.msg import HueState, Hue, HueArray
+from rocon_devices_msgs.msg import HueState, Hue, HueArray
 
 #phue
-from roshue import Bridge
-from roshue import PhueRegistrationException, PhueException
+from rocon_hue import Bridge
+from rocon_hue import PhueRegistrationException, PhueException
 
 
-class RosHue():
+class Rocon_Hue():
     def __init__(self):
         self.name = 'ros_hue'
 
@@ -23,12 +29,12 @@ class RosHue():
         self.bridge.set_ip_address(self.ip)
 
         rospy.init_node(self.name)
-        self.hue_list_publisher = rospy.Publisher("/hue_list", HueArray, latch=False)
-        rospy.Subscriber('/set_hue_color_on', Hue, self.set_hue_color_on)
-        rospy.Subscriber('/set_hue_color_xy', Hue, self.set_hue_color_xy)
-        rospy.Subscriber('/set_hue_color_hsv', Hue, self.set_hue_color_hsv)
-        rospy.Subscriber('/set_hue_color_ct', Hue, self.set_hue_color_ct)
-        rospy.Subscriber('/set_hue_color_mode', Hue, self.set_hue_color_mode)
+        self.hue_list_publisher = rospy.Publisher("hue_list", HueArray, latch=False)
+        rospy.Subscriber('set_hue_color_on', Hue, self.set_hue_color_on)
+        rospy.Subscriber('set_hue_color_xy', Hue, self.set_hue_color_xy)
+        rospy.Subscriber('set_hue_color_hsv', Hue, self.set_hue_color_hsv)
+        rospy.Subscriber('set_hue_color_ct', Hue, self.set_hue_color_ct)
+        rospy.Subscriber('set_hue_color_mode', Hue, self.set_hue_color_mode)
 
         self.checker_th = threading.Thread(target=self.hue_checker)
         self.is_checking = True
@@ -145,5 +151,5 @@ class RosHue():
 
 
 if __name__ == '__main__':
-    rh = RosHue()
+    rh = Rocon_Hue()
     rh.spin()

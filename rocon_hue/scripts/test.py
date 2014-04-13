@@ -1,10 +1,15 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+#
+# License: BSD
+#   https://raw.github.com/robotics-in-concert/rocon_devices/license/LICENSE
+#
+#################################################################################
 #sys
 import random
 
 #ros
 import rospy
-from roshue.msg import HueState, Hue, HueArray
+from rocon_devices_msgs.msg import HueState, Hue, HueArray
 
 
 class Test():
