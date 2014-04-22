@@ -9,7 +9,7 @@ import random
 
 #ros
 import rospy
-from rocon_devices_msgs.msg import HueState, Hue, HueArray
+from rocon_device_msgs.msg import HueState, Hue, HueArray
 
 
 class Test():
@@ -31,6 +31,7 @@ class Test():
 	def spin(self):
 		while not rospy.is_shutdown():
 			for hue in self.hue_list:
+				"""
 				on = random.randint(0,1)
 				if on:
 					hue.state.on = True
@@ -40,25 +41,26 @@ class Test():
 				self.hue_color_on_publisher.publish(hue)
 				
 				"""
+				"""
 				hue.state.xy = [random.random(), random.random()]
 				print "Set the color xy: [%f, %f]"%(hue.state.xy[0], hue.state.xy[1])
 				self.hue_color_xy_publisher.publish(hue)
 				"""
 
-				"""
+				
 				hue.state.hue = random.randint(0,65535)
 				hue.state.sat = random.randint(0,255)
 				hue.state.bri = random.randint(0,255)
 				print "Set the color hsv: [%d, %d, %d]"%(hue.state.hue, hue.state.sat, hue.state.bri)
 				self.hue_color_hsv_publisher.publish(hue)
-				"""
+				
 				
 				"""
 				hue.state.ct = random.randint(153,500)
 				print "Set the color ct: [%d]"%(hue.state.ct)
 				self.hue_color_ct_publisher.publish(hue)
 				"""
-				"""
+				
 				mode = random.randint(0,2)
 				if mode == 0:
 					hue.state.mode = HueState().NONE
@@ -71,7 +73,7 @@ class Test():
 					print "Set the color mode: [COLOR_LOOP]"
 				
 				self.hue_color_mode_publisher.publish(hue)
-				"""
+				
 			rospy.sleep(3.0)
 
 if __name__ == '__main__':

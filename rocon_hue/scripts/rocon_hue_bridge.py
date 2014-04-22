@@ -58,6 +58,7 @@ class Rocon_Hue():
             else:
                 self.bridge.is_connect = False
                 rospy.loginfo("bridge not connect")
+                
                 pass
             rospy.sleep(1)
 
@@ -96,7 +97,7 @@ class Rocon_Hue():
                 hue.state.transitiontime = light.transitiontime or 0
                 hue.state.reachable = light.reachable or False
                 hues.hue_list.append(hue)
-                self.hue_list_publisher.publish(hues)
+        self.hue_list_publisher.publish(hues)
 
     def set_hue_color_on(self, data):
         if self.bridge.is_connect:
