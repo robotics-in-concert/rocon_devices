@@ -12,7 +12,7 @@ from urllib2 import urlopen, URLError, HTTPError
 
 #ros
 import rospy
-from rocon_devices_msgs.msg import HueState, Hue, HueArray
+from rocon_device_msgs.msg import HueState, Hue, HueArray
 
 #phue
 from rocon_hue import Bridge
@@ -94,6 +94,7 @@ class Rocon_Hue():
                 hue.state.bri = light._brightness or 0
                 hue.state.mode = hue.state.NONE or light._effect or light._alert
                 hue.state.transitiontime = light.transitiontime or 0
+                hue.state.reachable = light.reachable or False
                 hues.hue_list.append(hue)
                 self.hue_list_publisher.publish(hues)
 
