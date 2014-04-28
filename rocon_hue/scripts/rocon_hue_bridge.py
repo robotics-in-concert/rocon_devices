@@ -107,52 +107,47 @@ class Rocon_Hue():
                 hues.hue_list.append(hue)
         self.hue_list_publisher.publish(hues)
 
-    def huemsg2state(self, data):
-        state = {}
-        state["on"] = data.state.on
-        state["xy"] = data.state.xy
-        state["hue"] = data.state.hue
-        state["bri"] = data.state.bri
-        state["sat"] = data.state.sat
-        state["ct"] = data.state.ct
-        if data.state.mode == HueState().NONE:
-                state["alert"] = data.state.mode
-                state["effect"] = data.state.mode
-        elif data.state.mode == HueState().COLOR_LOOP:
-            state["alert"] = data.state.NONE
-            state["effect"] = data.state.mode
-        elif data.state.mode == HueState().SELECT or data.state.mode == HueState().LSELECT:
-            state["alert"] = data.state.mode
-            state["effect"] = data.state.NONE
-        else:
-            state["alert"] = data.state.mode
-            state["effect"] = data.state.mode
-        self.bridge.set_light([data.light_id], state)
-        return state
-
     def set_hue_color_on(self, data):
         if self.bridge.is_connect:
-            state = self.huemsg2state(data)
+            state = {}
+            state["on"] = data.state.on
             self.bridge.set_light([data.light_id], state)
 
     def set_hue_color_xy(self, data):
         if self.bridge.is_connect:
-            state = self.huemsg2state(data)
+            state = {}
+            state["xy"] = data.state.xy
             self.bridge.set_light([data.light_id], state)
 
     def set_hue_color_hsv(self, data):
         if self.bridge.is_connect:
-            state = self.huemsg2state(data)
+            state = {}
+            state["hue"] = data.state.hue
+            state["bri"] = data.state.bri
+            state["sat"] = data.state.sat
             self.bridge.set_light([data.light_id], state)
 
     def set_hue_color_ct(self, data):
         if self.bridge.is_connect:
-            state = self.huemsg2state(data)
+            state = {}
+            state["ct"] = data.state.ct
             self.bridge.set_light([data.light_id], state)
 
     def set_hue_color_mode(self, data):
         if self.bridge.is_connect:
-            state = self.huemsg2state(data)
+            state = {}
+            if data.state.mode == HueState().NONE:
+                state["alert"] = data.state.mode
+                state["effect"] = data.state.mode
+            elif data.state.mode == HueState().COLOR_LOOP:
+                state["alert"] = data.state.NONE
+                state["effect"] = data.state.mode
+            elif data.state.mode == HueState().SELECT or data.state.mode == HueState().LSELECT:
+                state["alert"] = data.state.mode
+                state["effect"] = data.state.NONE
+            else:
+                state["alert"] = data.state.mode
+                state["effect"] = data.state.mode
             self.bridge.set_light([data.light_id], state)
 
     def spin(self):

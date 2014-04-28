@@ -53,13 +53,12 @@ class Test():
 				print "Set the color hsv: [%d, %d, %d]"%(hue.state.hue, hue.state.sat, hue.state.bri)
 				self.hue_color_hsv_publisher.publish(hue)
 				
-				rospy.sleep(3.0)
 				"""
 				hue.state.ct = random.randint(153,500)
 				print "Set the color ct: [%d]"%(hue.state.ct)
 				self.hue_color_ct_publisher.publish(hue)
 				"""
-				
+				"""
 				mode = random.randint(0,2)
 				mode = 1
 				if mode == 0:
@@ -73,6 +72,7 @@ class Test():
 					print "Set the color mode: [COLOR_LOOP]"
 				
 				self.hue_color_mode_publisher.publish(hue)
+				"""
 				
 			rospy.sleep(3.0)
 
