@@ -7,7 +7,7 @@
     <param name="door_ctrl_io_port" value="13"/>
     
     <!-- optional parameters -->
-    <param name="timer_ctrl" value="true"/>
+    <param name="timer_ctrl" value="false"/>
     <param name="open_door_trigger_duration" value="5.0"/>
     <param name="close_door_trigger_duration" value="1.0"/>
     <param name="open_door_trigger_duration_timer" value="1.0"/>
