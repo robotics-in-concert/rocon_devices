@@ -59,7 +59,7 @@ class RoconAutoDoor(object):
         if resp.status_code == requests.codes.ok:
             return True, str()
         else:
-            return False, str(requests.text)
+            return False, str(requests.content)
 
     def _door_ctrl_cb(self, msg):
         # TODO: use a separate thread for this
