@@ -10,6 +10,7 @@
 
 
   <node pkg="rocon_auto_door" type="auto_door.py" name="rocon_auto_door">
+    <!-- parameters -->
     <param name="arduino_ip"                        value="$(arg arduino_ip)"/>
     <param name="door_ctrl_io_port"                 value="$(arg door_ctrl_io_port)"/>
     <param name="timer_ctrl"                        value="$(arg timer_ctrl)"/>

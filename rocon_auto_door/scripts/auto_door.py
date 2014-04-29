@@ -59,7 +59,7 @@ class RoconAutoDoor(object):
         if resp.status_code == requests.codes.ok:
             return True, str()
         else:
-            return False, str(requests.content)
+            return False, str(resp.content)
 
     def _door_ctrl_cb(self, msg):
         # TODO: use a separate thread for this
@@ -98,7 +98,7 @@ class RoconAutoDoor(object):
             rospy.loginfo(status_msg.data)
         else:
             self._current_ctrl_mode = self._IDLING
-            status_msg.data = "Failed to contact the door control! Error code: " + str(resp_msg)
+            status_msg.data = "Failed to contact the door control! Error: " + str(resp_msg)
             self._door_status_pub.publish(status_msg)
             rospy.logwarn(status_msg.data)
 
@@ -117,7 +117,7 @@ class RoconAutoDoor(object):
                             self._door_status_pub.publish(status_msg)
                             rospy.loginfo(status_msg.data)
                         else:
-                            status_msg.data = "Failed to contact the door control! Error code: " + str(status)
+                            status_msg.data = "Failed to contact the door control! Error: " + str(status)
                             self._door_status_pub.publish(status_msg)
                             rospy.logwarn(status_msg.data)
             else:
@@ -131,7 +131,7 @@ class RoconAutoDoor(object):
                             self._door_status_pub.publish(status_msg)
                             rospy.loginfo(status_msg.data)
                         else:
-                            status_msg.data = "Failed to contact the door control! Error code: " + str(status)
+                            status_msg.data = "Failed to contact the door control! Error: " + str(status)
                             self._door_status_pub.publish(status_msg)
                             rospy.logwarn(status_msg.data)
                 elif self._current_ctrl_mode == self._CLOSING:
@@ -144,7 +144,7 @@ class RoconAutoDoor(object):
                             self._door_status_pub.publish(status_msg)
                             rospy.loginfo(status_msg.data)
                         else:
-                            status_msg.data = "Failed to contact the door control! Error code: " + str(status)
+                            status_msg.data = "Failed to contact the door control! Error: " + str(status)
                             self._door_status_pub.publish(status_msg)
                             rospy.logwarn(status_msg.data)
             spin_rate.sleep()
