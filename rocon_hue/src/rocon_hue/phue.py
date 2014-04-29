@@ -484,16 +484,16 @@ class Bridge(object):
         """ close connection after read() is done, to prevent issues with read() """
 
         connection.close()
-
-        ip = str(data[0]['internalipaddress'])
-
-        if ip is not '':
-            if set_result:
-                self.ip = ip
-
-            return ip
+        if len(data) is 0:
+            return
         else:
-            return False
+            ip = str(data[0]['internalipaddress'])
+            if ip is not '':
+                if set_result:
+                    self.ip = ip
+                return ip
+            else:
+                return False
 
     def register_app(self):
         """ Register this computer with the Hue bridge hardware and save the resulting access token """

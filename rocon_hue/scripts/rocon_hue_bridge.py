@@ -58,14 +58,15 @@ class Rocon_Hue():
             else:
                 self.bridge.is_connect = False
                 rospy.loginfo("bridge not connect")
-                
                 pass
             rospy.sleep(1)
 
     def ping_checker(self):
         time_out = 2  # 3secend
         socket.setdefaulttimeout(time_out)  # timeout in seconds
-        url = "http://" + self.ip
+        self.ip = self.bridge.get_ip_address(set_result=True)
+        self.bridge.set_ip_address(self.ip)
+        url = "http://" + str(self.ip)
         try:
             urlopen(url, timeout=time_out)
         except HTTPError, e:
@@ -87,25 +88,16 @@ class Rocon_Hue():
             if light.reachable:
                 hue = Hue()
                 hue.light_id = light.light_id
-                state = self.bridge.get_light(hue.light_id)
-                hue.name = state['name']
-                hue.state.on = state['state']['on']
-                hue.state.xy = state['state']['xy']
-                hue.state.hue = state['state']['hue']
-                hue.state.sat = state['state']['sat']
-                hue.state.bri = state['state']['bri']
-                hue.state.ct = state['state']['ct']
-                hue.state.reachable = hue.state.bri = state['state']['reachable']
-                alert_mode = state['state']['alert']
-                effect_mode = state['state']['effect']
-
-                if alert_mode is hue.state.NONE:
-                    alert_mode = None
-                if effect_mode is hue.state.NONE:
-                    effect_mode = None
-                hue.state.mode = alert_mode or effect_mode
+                hue.name = light.name
+                hue.state.on = light.on
+                hue.state.xy = light.xy
+                hue.state.hue = light._hue or 0
+                hue.state.sat = light._saturation or 0
+                hue.state.bri = light._brightness or 0
+                hue.state.mode = hue.state.NONE or light._effect or light._alert
+                hue.state.transitiontime = light.transitiontime or 0
                 hues.hue_list.append(hue)
-        self.hue_list_publisher.publish(hues)
+                self.hue_list_publisher.publish(hues)
 
     def set_hue_color_on(self, data):
         if self.bridge.is_connect:
