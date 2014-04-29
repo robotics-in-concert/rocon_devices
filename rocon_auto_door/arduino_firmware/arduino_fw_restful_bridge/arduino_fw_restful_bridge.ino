@@ -23,6 +23,8 @@ void setup() {
   digitalWrite(13, LOW);
   Bridge.begin();
   digitalWrite(13, HIGH);
+  delay(500);
+  digitalWrite(13, LOW);
 
   // Listen for incoming connection only from localhost
   // (no one from the external network could connect)

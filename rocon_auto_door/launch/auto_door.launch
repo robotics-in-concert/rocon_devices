@@ -1,6 +1,19 @@
 <launch>
   <node pkg="rocon_auto_door" type="auto_door.py" name="rocon_auto_door">
+    <!-- mandatory parameters -->
+    <!-- IP of the Arduino Yun -->
     <param name="arduino_ip" value="192.168.10.227"/>
+    <!-- number of the port the remote is connected to -->
     <param name="door_ctrl_io_port" value="13"/>
+    
+    <!-- optional parameters -->
+    <param name="timer_ctrl" value="true"/>
+    <param name="open_door_trigger_duration" value="5.0"/>
+    <param name="close_door_trigger_duration" value="1.0"/>
+    <param name="open_door_trigger_duration_timer" value="1.0"/>
+    
+    <!-- topic remappings -->
+<!--     <remap from="door_ctrl" to=""/> -->
+<!--     <remap from="door_status" to=""/> -->
   </node>
 </launch>
