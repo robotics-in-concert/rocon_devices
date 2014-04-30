@@ -64,7 +64,9 @@ class Rocon_Hue():
     def ping_checker(self):
         time_out = 2  # 3secend
         socket.setdefaulttimeout(time_out)  # timeout in seconds
-        url = "http://" + self.ip
+        self.ip = self.bridge.get_ip_address(set_result=True)
+        self.bridge.set_ip_address(self.ip)
+        url = "http://" + str(self.ip)
         try:
             urlopen(url, timeout=time_out)
         except HTTPError, e:
