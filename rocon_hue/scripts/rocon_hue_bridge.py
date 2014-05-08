@@ -47,17 +47,17 @@ class Rocon_Hue():
                     try:
                         self.bridge.connect()
                     except PhueRegistrationException as e:
-                        rospy.logwarn(e.message)
+                        self.logwarn(e.message)
                     except PhueException as e:
-                        rospy.logwarn(e.message)
+                        self.logwarn(e.message)
                     else:
-                        rospy.loginfo("bridge connect")
+                        self.loginfo("bridge connect")
                         self.bridge.is_connect = True
                 else:
                     self.bulb_checker()
             else:
                 self.bridge.is_connect = False
-                rospy.loginfo("bridge not connect")
+                self.loginfo("bridge not connect")
                 pass
             rospy.sleep(1)
 
@@ -70,13 +70,13 @@ class Rocon_Hue():
         try:
             urlopen(url, timeout=time_out)
         except HTTPError, e:
-            rospy.logwarn('The server can not fulfill the request. Reason: %s' % str(e.code))
+            self.logwarn('The server can not fulfill the request. Reason: %s' % str(e.code))
             return False
         except URLError, e:
-            rospy.logwarn('We failed to reach a server. Reason: %s' % str(e.reason))
+            self.logwarn('failed to reach a server. Reason: %s' % str(e.reason))
             return False
         except socket.timeout, e:
-            rospy.logwarn('We failed socket timeout. Reason: %s' % str(e))
+            self.logwarn('failed socket timeout. Reason: %s' % str(e))
             return False
         else:
             return True
@@ -141,6 +141,12 @@ class Rocon_Hue():
                 state["alert"] = data.state.mode
                 state["effect"] = data.state.mode
             self.bridge.set_light([data.light_id], state)
+
+    def loginfo(self, msg):
+        rospy.loginfo('Rocon Hue : ' + str(msg))
+
+    def logwarn(self, msg):
+        rospy.logwarn('Rocon Hue : ' + str(msg))
 
     def spin(self):
         while not rospy.is_shutdown():
