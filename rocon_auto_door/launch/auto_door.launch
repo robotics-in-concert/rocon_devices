@@ -1,10 +1,10 @@
 <launch>
   <!-- mandatory parameters -->
   <arg name="arduino_ip"                        default="192.168.10.227"/> <!-- IP of the Arduino Yun -->
-  <arg name="door_ctrl_io_port"                 default="13"/> <!-- number of the port the remote is connected to -->
+  <arg name="door_ctrl_io_port"                 default="11"/> <!-- number of the port the remote is connected to -->
   <arg name="timer_ctrl"                        default="false"/> <!-- timer or open/close mode -->
   <!-- optional parameters -->
-  <arg name="open_door_trigger_duration"        default="5.0"/> <!-- signal duration required for opening the door -->
+  <arg name="open_door_trigger_duration"        default="2.0"/> <!-- signal duration required for opening the door -->
   <arg name="close_door_trigger_duration"       default="1.0"/> <!-- signal duration required for closing the door -->
   <arg name="open_door_trigger_duration_timer"  default="1.0"/> <!-- signal duration required for opening the door in timer mode-->
 
