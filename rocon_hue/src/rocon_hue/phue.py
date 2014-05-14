@@ -445,15 +445,13 @@ class Bridge(object):
 
     def request(self, mode='GET', address=None, data=None):
         """ Utility function for HTTP GET/PUT requests for the API"""
-        connection = httplib.HTTPConnection(self.ip)
-
-        if mode == 'GET' or mode == 'DELETE':
-            connection.request(mode, address)
-        if mode == 'PUT' or mode == 'POST':
-            connection.request(mode, address, data)
-
-        logger.debug("{0} {1} {2}".format(mode, address, str(data)))
         try:
+            connection = httplib.HTTPConnection(self.ip)
+            if mode == 'GET' or mode == 'DELETE':
+                connection.request(mode, address)
+            if mode == 'PUT' or mode == 'POST':
+                connection.request(mode, address, data)
+            logger.debug("{0} {1} {2}".format(mode, address, str(data)))
             result = connection.getresponse()
         except socket.timeout, e:
             logger.info('time out error: %s' % str(e))
@@ -473,12 +471,10 @@ class Bridge(object):
     def get_ip_address(self, set_result=False):
 
         """ Get the bridge ip address from the meethue.com nupnp api """
-
-        connection = httplib.HTTPConnection('www.meethue.com')
-        connection.request('GET', '/api/nupnp')
-
-        logger.info('Connecting to meethue.com/api/nupnp')
         try:
+            connection = httplib.HTTPConnection('www.meethue.com')
+            connection.request('GET', '/api/nupnp')
+            logger.info('Connecting to meethue.com/api/nupnp')    
             result = connection.getresponse()
         except socket.timeout, e:
             logger.info('time out error: %s' % str(e))
