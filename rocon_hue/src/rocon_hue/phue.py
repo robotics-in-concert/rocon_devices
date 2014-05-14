@@ -458,8 +458,7 @@ class Bridge(object):
         except socket.timeout, e:
             logger.info('time out error: %s' % str(e))
             return ""
-        else:
-            return ""
+
         connection.close()
         if PY3K:
             return json.loads(str(result.read(), encoding='utf-8'))
@@ -483,8 +482,6 @@ class Bridge(object):
             result = connection.getresponse()
         except socket.timeout, e:
             logger.info('time out error: %s' % str(e))
-            return False
-        else:
             return False
 
         if PY3K:

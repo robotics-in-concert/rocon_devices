@@ -59,7 +59,7 @@ class Rocon_Hue():
                 self.ip = self.bridge.get_ip_address(set_result=True)
                 self.bridge.set_ip_address(self.ip)
                 self.bridge.is_connect = False
-                self.loginfo("bridge not connect")
+                self.loginfo("bridge not connect %s"% self.ip)
                 pass
             rospy.sleep(1)
 
