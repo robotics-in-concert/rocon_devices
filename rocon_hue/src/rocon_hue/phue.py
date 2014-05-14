@@ -619,6 +619,8 @@ class Bridge(object):
             return self.request('GET', '/api/' + self.username + '/lights/')
         state = self.request(
             'GET', '/api/' + self.username + '/lights/' + str(light_id))
+        if state is "":
+            return ""
         if parameter is None:
             return state
         if parameter == 'name':
