@@ -24,6 +24,7 @@ import json
 import os
 import platform
 import sys
+import socket
 from exceptions import * 
 if sys.version_info[0] > 2:
     PY3K = True
@@ -452,7 +453,13 @@ class Bridge(object):
             connection.request(mode, address, data)
 
         logger.debug("{0} {1} {2}".format(mode, address, str(data)))
-        result = connection.getresponse()
+        try:
+            result = connection.getresponse()
+        except socket.timeout, e:
+            logger.info('time out error: %s' % str(e))
+            return ""
+        else:
+            return ""
         connection.close()
         if PY3K:
             return json.loads(str(result.read(), encoding='utf-8'))
@@ -472,8 +479,13 @@ class Bridge(object):
         connection.request('GET', '/api/nupnp')
 
         logger.info('Connecting to meethue.com/api/nupnp')
-
-        result = connection.getresponse()
+        try:
+            result = connection.getresponse()
+        except socket.timeout, e:
+            logger.info('time out error: %s' % str(e))
+            return False
+        else:
+            return False
 
         if PY3K:
             data = json.loads(str(result.read(), encoding='utf-8'))
@@ -497,7 +509,7 @@ class Bridge(object):
 
     def register_app(self):
         """ Register this computer with the Hue bridge hardware and save the resulting access token """
-        registration_request = {"devicetype": "rocon_hue","username":self.username}
+        registration_request = {"devicetype": "rocon_hue", "username": self.username}
         data = json.dumps(registration_request)
         response = self.request('POST', '/api', data)
         for line in response:
