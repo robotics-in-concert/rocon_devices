@@ -56,6 +56,8 @@ class Rocon_Hue():
                 else:
                     self.bulb_checker()
             else:
+                self.ip = self.bridge.get_ip_address(set_result=True)
+                self.bridge.set_ip_address(self.ip)
                 self.bridge.is_connect = False
                 self.loginfo("bridge not connect")
                 pass
@@ -64,10 +66,8 @@ class Rocon_Hue():
     def ping_checker(self):
         time_out = 2  # 3secend
         socket.setdefaulttimeout(time_out)  # timeout in seconds
-        self.ip = self.bridge.get_ip_address(set_result=True)
-        self.bridge.set_ip_address(self.ip)
-        url = "http://" + str(self.ip)
         try:
+            url = "http://" + str(self.ip)
             urlopen(url, timeout=time_out)
         except HTTPError, e:
             self.logwarn('The server can not fulfill the request. Reason: %s' % str(e.code))
