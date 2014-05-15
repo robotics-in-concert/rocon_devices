@@ -82,22 +82,22 @@ class Rocon_Hue():
             return True
 
     def bulb_checker(self):
-        lights = self.bridge.get_light_objects()
+        light_ids = self.bridge.get_light_objects(mode='id')
         hues = HueArray()
-        for light in lights:
-            if light.reachable:
+        for light_id in light_ids:
+            state = self.bridge.get_light(light_id)
+            if state is not "":
                 hue = Hue()
-                hue.light_id = light.light_id
-                hue.name = light.name
-                hue.state.on = light.on
-                hue.state.xy = light.xy
-                hue.state.hue = light._hue or 0
-                hue.state.sat = light._saturation or 0
-                hue.state.bri = light._brightness or 0
-                hue.state.mode = hue.state.NONE or light._effect or light._alert
-                hue.state.transitiontime = light.transitiontime or 0
+                state['state'][parameter]
+                hue.light_id = light_id
+                hue.name = state['state']
+                hue.state.on = state['state']['on']
+                hue.state.xy = state['state']['xy']
+                hue.state.hue = state['state']['hue']
+                hue.state.sat = state['state']['sat']
+                hue.state.bri = state['state']['bri']
                 hues.hue_list.append(hue)
-                self.hue_list_publisher.publish(hues)
+        self.hue_list_publisher.publish(hues)
 
     def set_hue_color_on(self, data):
         if self.bridge.is_connect:
