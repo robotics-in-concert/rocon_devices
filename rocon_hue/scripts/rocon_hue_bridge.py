@@ -61,7 +61,7 @@ class Rocon_Hue():
                 self.bridge.is_connect = False
                 self.loginfo("bridge not connect %s"% self.ip)
                 pass
-            rospy.sleep(1)
+            rospy.sleep(5)
 
     def ping_checker(self):
         time_out = 2  # 3secend
@@ -86,11 +86,11 @@ class Rocon_Hue():
         hues = HueArray()
         for light_id in light_ids:
             state = self.bridge.get_light(light_id)
+            print state
             if state is not "":
                 hue = Hue()
-                state['state'][parameter]
                 hue.light_id = light_id
-                hue.name = state['state']
+                hue.name = state['name']
                 hue.state.on = state['state']['on']
                 hue.state.xy = state['state']['xy']
                 hue.state.hue = state['state']['hue']
