@@ -86,7 +86,6 @@ class Rocon_Hue():
         hues = HueArray()
         for light_id in light_ids:
             state = self.bridge.get_light(light_id)
-            print state
             if state is not "":
                 hue = Hue()
                 hue.light_id = light_id
