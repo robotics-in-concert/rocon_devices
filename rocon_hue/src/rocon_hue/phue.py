@@ -310,7 +310,7 @@ class Group(Light):
                 else:
                     if info['name'] == unicode(name, encoding='utf-8'):
                         self.group_id = int(idnumber)
-                        break  
+                        break
             else:
                 raise LookupError("Could not find a group by that name.")
 
@@ -456,6 +456,8 @@ class Bridge(object):
         except socket.timeout, e:
             logger.info('time out error: %s' % str(e))
             return ""
+        except Exception, e:
+            return ""
 
         connection.close()
         if PY3K:
@@ -474,10 +476,12 @@ class Bridge(object):
         try:
             connection = httplib.HTTPConnection('www.meethue.com')
             connection.request('GET', '/api/nupnp')
-            logger.info('Connecting to meethue.com/api/nupnp')    
+            logger.info('Connecting to meethue.com/api/nupnp')
             result = connection.getresponse()
         except socket.timeout, e:
             logger.info('time out error: %s' % str(e))
+            return False
+        except Exception, e:
             return False
 
         if PY3K:
@@ -543,7 +547,6 @@ class Bridge(object):
                 self.check_user_validation()
             except Exception as e:
                 self.register_app()
-
 
     def get_light_id_by_name(self, name):
         """ Lookup a light id based on string name. Case-sensitive. """
@@ -672,7 +675,9 @@ class Bridge(object):
                         converted_light = light
                 result.append(self.request('PUT', '/api/' + self.username + '/lights/' + str(
                     converted_light) + '/state', json.dumps(data)))
-            if 'error' in list(result[-1][0].keys()):
+            if result == '':
+                return result
+            elif 'error' in list(result[-1][0].keys()):
                 logger.warn("ERROR: {0} for light {1}".format(
                     result[-1][0]['error']['description'], light))
 
@@ -762,11 +767,12 @@ class Bridge(object):
                 logger.error('Group name does not exit')
                 return
             if parameter == 'name' or parameter == 'lights':
-                result.append(self.request('PUT', '/api/' + self.username + '/groups/' + str(converted_group), json.dumps(data))) 
+                result.append(self.request('PUT', '/api/' + self.username + '/groups/' + str(converted_group), json.dumps(data)))
             else:
                 result.append(self.request('PUT', '/api/' + self.username + '/groups/' + str(converted_group) + '/action', json.dumps(data)))
-        
-        if 'error' in list(result[-1][0].keys()):
+        if result == '':
+            return result
+        elif 'error' in list(result[-1][0].keys()):
             logger.warn("ERROR: {0} for group {1}".format(
                 result[-1][0]['error']['description'], group))
 
@@ -829,7 +835,7 @@ class Bridge(object):
 
     def delete_schedule(self, schedule_id):
         return self.request('DELETE', '/api/' + self.username + '/schedules/' + str(schedule_id))
-    
+
 """
 if __name__ == '__main__':
     import argparse

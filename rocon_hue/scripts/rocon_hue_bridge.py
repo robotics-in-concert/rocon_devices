@@ -69,6 +69,7 @@ class Rocon_Hue():
         try:
             url = "http://" + str(self.ip)
             urlopen(url, timeout=time_out)
+
         except HTTPError, e:
             self.logwarn('The server can not fulfill the request. Reason: %s' % str(e.code))
             return False
@@ -78,6 +79,8 @@ class Rocon_Hue():
         except socket.timeout, e:
             self.logwarn('failed socket timeout. Reason: %s' % str(e))
             return False
+        except Exception, e:
+            self.logwarn('failed. Reason:%s' % str(e))
         else:
             return True
 
