@@ -22,13 +22,19 @@ from rocon_hue import PhueRegistrationException, PhueException
 class Rocon_Hue():
     def __init__(self):
         self.name = 'ros_hue'
-
-        self.bridge = Bridge()
-
-        self.ip = self.bridge.get_ip_address(set_result=True)
-        self.bridge.set_ip_address(self.ip)
-
+        self.ip = None
         rospy.init_node(self.name)
+        
+        self.bridge = Bridge()
+        
+        if rospy.has_param('~hue_ip'):
+            self.ip = rospy.get_param('~hue_ip')
+            print self.ip
+        else:
+            print 'No argument hue ip'
+            return
+        
+        self.bridge.set_ip_address(self.ip)
         self.hue_list_publisher = rospy.Publisher("hue_list", HueArray, latch=False)
         rospy.Subscriber('set_hue_color_on', Hue, self.set_hue_color_on)
         rospy.Subscriber('set_hue_color_xy', Hue, self.set_hue_color_xy)
@@ -56,7 +62,6 @@ class Rocon_Hue():
                 else:
                     self.bulb_checker()
             else:
-                self.ip = self.bridge.get_ip_address(set_result=True)
                 self.bridge.set_ip_address(self.ip)
                 self.bridge.is_connect = False
                 self.loginfo("bridge not connect %s"% self.ip)
@@ -151,14 +156,16 @@ class Rocon_Hue():
         rospy.logwarn('Rocon Hue : ' + str(msg))
 
     def spin(self):
-        while not rospy.is_shutdown():
-            try:
-                rospy.sleep(0.01)
-            except:
-                break
-        self.is_checking = False
-        self.checker_th.join(1)
-
+        if self.ip is not None:
+            while not rospy.is_shutdown():
+                try:
+                    rospy.sleep(0.01)
+                except:
+                    break
+            self.is_checking = False
+            self.checker_th.join(1)
+        else:
+            print ('Rocon Hue : Must set hue ip')
 
 if __name__ == '__main__':
     rh = Rocon_Hue()
