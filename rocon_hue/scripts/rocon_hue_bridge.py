@@ -29,9 +29,9 @@ class Rocon_Hue():
         
         if rospy.has_param('~hue_ip'):
             self.ip = rospy.get_param('~hue_ip')
-            print self.ip
+            self.loginfo(self.ip)
         else:
-            print 'No argument hue ip'
+            self.logwarn('No argument hue ip')
             return
         
         self.bridge.set_ip_address(self.ip)
@@ -116,12 +116,14 @@ class Rocon_Hue():
     def set_hue_color_xy(self, data):
         if self.bridge.is_connect:
             state = {}
+            state["on"] = True
             state["xy"] = data.state.xy
             self.bridge.set_light([data.light_id], state)
 
     def set_hue_color_hsv(self, data):
         if self.bridge.is_connect:
             state = {}
+            state["on"] = True
             state["hue"] = data.state.hue
             state["bri"] = data.state.bri
             state["sat"] = data.state.sat
@@ -130,11 +132,13 @@ class Rocon_Hue():
     def set_hue_color_ct(self, data):
         if self.bridge.is_connect:
             state = {}
+            state["on"] = True
             state["ct"] = data.state.ct
             self.bridge.set_light([data.light_id], state)
 
     def set_hue_color_mode(self, data):
         if self.bridge.is_connect:
+            state["on"] = True
             state = {}
             if data.state.mode == HueState().NONE:
                 state["alert"] = data.state.mode
@@ -166,7 +170,7 @@ class Rocon_Hue():
             self.is_checking = False
             self.checker_th.join(1)
         else:
-            print ('Rocon Hue : Must set hue ip')
+            self.logwarn('Rocon Hue : Must set hue ip')
 
 if __name__ == '__main__':
     rh = Rocon_Hue()
