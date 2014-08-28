@@ -103,6 +103,7 @@ class Rocon_Hue():
                 hue.state.hue = state['state']['hue']
                 hue.state.sat = state['state']['sat']
                 hue.state.bri = state['state']['bri']
+                hue.state.reachable = state['state']['reachable']
                 hues.hue_list.append(hue)
         self.hue_list_publisher.publish(hues)
 
