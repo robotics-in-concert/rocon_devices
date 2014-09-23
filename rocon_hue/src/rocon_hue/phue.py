@@ -453,19 +453,19 @@ class Bridge(object):
                 connection.request(mode, address, data)
             logger.debug("{0} {1} {2}".format(mode, address, str(data)))
             result = connection.getresponse()
+            connection.close()
+
+            if PY3K:
+                return json.loads(str(result.read(), encoding='utf-8'))
+            else:
+                result_str = result.read()
+                logger.debug(result_str)
+                return json.loads(result_str)
+        
         except socket.timeout, e:
             logger.info('time out error: %s' % str(e))
-            return ""
         except Exception, e:
             return ""
-
-        connection.close()
-        if PY3K:
-            return json.loads(str(result.read(), encoding='utf-8'))
-        else:
-            result_str = result.read()
-            logger.debug(result_str)
-            return json.loads(result_str)
 
     def set_ip_address(self, ip_address='127.0.0.1'):
         self.ip = ip_address
@@ -488,6 +488,8 @@ class Bridge(object):
             data = json.loads(str(result.read(), encoding='utf-8'))
         else:
             result_str = result.read()
+            print "result_str"
+            print result_str
             data = json.loads(result_str)
 
         """ close connection after read() is done, to prevent issues with read() """
@@ -509,6 +511,9 @@ class Bridge(object):
         registration_request = {"devicetype": "rocon_hue", "username": self.username}
         data = json.dumps(registration_request)
         response = self.request('POST', '/api', data)
+        if len(response) is 0:
+            raise PhueException(404, "No response from hue bridge")
+
         for line in response:
             for key in line:
                 if 'error' in key:
@@ -522,6 +527,9 @@ class Bridge(object):
 
     def check_user_validation(self):
         response = self.request('GET', '/api' + self.username)
+        if len(response) is 0:
+            raise PhueException(404, "No response from hue bridge")
+
         for line in response:
             for key in line:
                 if 'success' in key:

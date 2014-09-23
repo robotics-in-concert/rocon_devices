@@ -18,3 +18,4 @@ class PhueException(Exception):
 
 class PhueRegistrationException(PhueException):
     pass
+
