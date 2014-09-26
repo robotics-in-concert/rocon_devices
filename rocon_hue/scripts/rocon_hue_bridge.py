@@ -35,7 +35,7 @@ class Rocon_Hue():
             return
         
         self.bridge.set_ip_address(self.ip)
-        self.hue_list_publisher = rospy.Publisher("hue_list", HueArray, latch=False)
+        self.hue_list_publisher = rospy.Publisher("hue_list", HueArray, latch=False, queue_size=1)
         rospy.Subscriber('set_hue_color_on', Hue, self.set_hue_color_on)
         rospy.Subscriber('set_hue_color_xy', Hue, self.set_hue_color_xy)
         rospy.Subscriber('set_hue_color_hsv', Hue, self.set_hue_color_hsv)
