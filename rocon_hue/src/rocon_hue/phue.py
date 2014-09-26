@@ -488,8 +488,6 @@ class Bridge(object):
             data = json.loads(str(result.read(), encoding='utf-8'))
         else:
             result_str = result.read()
-            print "result_str"
-            print result_str
             data = json.loads(result_str)
 
         """ close connection after read() is done, to prevent issues with read() """
