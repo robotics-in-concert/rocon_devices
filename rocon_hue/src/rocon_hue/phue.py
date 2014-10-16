@@ -456,11 +456,19 @@ class Bridge(object):
             connection.close()
 
             if PY3K:
-                return json.loads(str(result.read(), encoding='utf-8'))
+                result = json.loads(str(result.read(), encoding='utf-8'))
+                if result:
+                    return result
+                else:
+                    raise PhueException(404, "No response from hue bridge")
             else:
                 result_str = result.read()
                 logger.debug(result_str)
-                return json.loads(result_str)
+                result = json.loads(result_str)
+                if result:
+                    return result
+                else:
+                    raise PhueException(404, "No response from hue bridge")
         
         except socket.timeout, e:
             logger.info('time out error: %s' % str(e))
@@ -681,7 +689,10 @@ class Bridge(object):
                         converted_light = light
                 result.append(self.request('PUT', '/api/' + self.username + '/lights/' + str(
                     converted_light) + '/state', json.dumps(data)))
+            
             if result == '':
+                return result
+            elif result is None:
                 return result
             elif 'error' in list(result[-1][0].keys()):
                 logger.warn("ERROR: {0} for light {1}".format(

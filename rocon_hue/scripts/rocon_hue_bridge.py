@@ -35,7 +35,7 @@ class Rocon_Hue():
             return
         
         self.bridge.set_ip_address(self.ip)
-        self.hue_list_publisher = rospy.Publisher("hue_list", HueArray, latch=False, queue_size=1)
+        self.hue_list_publisher = rospy.Publisher("hue_list", HueArray, latch=True, queue_size=10)
         rospy.Subscriber('set_hue_color_on', Hue, self.set_hue_color_on)
         rospy.Subscriber('set_hue_color_xy', Hue, self.set_hue_color_xy)
         rospy.Subscriber('set_hue_color_hsv', Hue, self.set_hue_color_hsv)
@@ -94,7 +94,10 @@ class Rocon_Hue():
         hues = HueArray()
         for light_id in light_ids:
             state = self.bridge.get_light(light_id)
-            if state is not "":
+            if not state:
+                self.logwarn('response is None')
+                continue
+            elif state is not "":
                 hue = Hue()
                 hue.light_id = light_id
                 hue.name = state['name']

@@ -1,6 +1,6 @@
 <launch>
   <arg name="set_color" default="set_color"/>
-  <arg name="hue_ip"                        default="192.168.10.143"/> <!-- IP of the Hue Bridge -->
+  <arg name="hue_ip"                        default="192.168.10.114"/> <!-- IP of the Hue Bridge -->
   
   <!--hue manager-->
 

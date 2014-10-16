@@ -5,8 +5,6 @@
 #
 
 import rospy
-
-from std_msgs.msg import *
 import rocon_device_msgs.msg as rocon_device_msgs
 
 class HueManager():
@@ -25,10 +23,10 @@ class HueManager():
         self.hues = {}
         self.hues_init = False
 
-        self.publisher['set_hue_hsv'] = rospy.Publisher('set_hue_color_hsv', rocon_device_msgs.Hue, queue_size=1)
-        self.publisher['set_hue_on'] = rospy.Publisher('set_hue_color_on', rocon_device_msgs.Hue, queue_size=1)
+        self.publisher['set_hue_hsv'] = rospy.Publisher('set_hue_color_hsv', rocon_device_msgs.Hue)
+        self.publisher['set_hue_on'] = rospy.Publisher('set_hue_color_on', rocon_device_msgs.Hue)
 
-        self.subscriber['set_color'] = rospy.Subscriber('set_color', String, self.update_color)
+        self.subscriber['set_color'] = rospy.Subscriber('set_color', rocon_device_msgs.SetColor, self.update_color)
         self.subscriber['hue_list'] = rospy.Subscriber('hue_list', rocon_device_msgs.HueArray, self.hue_update)
         pass
 
@@ -45,11 +43,13 @@ class HueManager():
             self.hues_init = False
             self.hues = {}
             return
+        
         for hue in data.hue_list:
             self.hues[hue.light_id] = hue
 
     def update_color(self, data):
-        color = str(data.data)
+        id = str(data.id)
+        color = str(data.color)
         hue = sat = bri = 0
         on = True
         if color == "OFF":
@@ -78,16 +78,17 @@ class HueManager():
             if not self.hues_init:
                 self.loginfo("hue does not init, yet")
                 return
-            elif not on:
-                self.loginfo("hue turn off")
-                self.hues[hue_id].state.on = on
-                self.publisher['set_hue_on'].publish(self.hues[hue_id])
-            else:
-                self.hues[hue_id].state.hue = hue
-                self.hues[hue_id].state.sat = sat
-                self.hues[hue_id].state.bri = bri
-                self.publisher['set_hue_hsv'].publish(self.hues[hue_id])
-                self.loginfo("hue set the %s" % color)
+            elif id ==  str(hue_id):
+                if not on:
+                    self.loginfo("%s hue turn off" % str(hue_id))
+                    self.hues[hue_id].state.on = on
+                    self.publisher['set_hue_on'].publish(self.hues[hue_id])
+                else:
+                    self.hues[hue_id].state.hue = hue
+                    self.hues[hue_id].state.sat = sat
+                    self.hues[hue_id].state.bri = bri
+                    self.publisher['set_hue_hsv'].publish(self.hues[hue_id])
+                    self.loginfo("hue set the %s" % color)
 
     def loginfo(self, msg):
         rospy.loginfo('Hue Manager : ' + str(msg))
