@@ -460,7 +460,7 @@ class Bridge(object):
                 if result:
                     return result
                 else:
-                    raise PhueException(404, "No response from hue bridge")
+                    raise PhueException(404, "No response from hue bridge: [%s]", str(result))
             else:
                 result_str = result.read()
                 logger.debug(result_str)
@@ -468,7 +468,7 @@ class Bridge(object):
                 if result:
                     return result
                 else:
-                    raise PhueException(404, "No response from hue bridge")
+                    raise PhueException(404, "No response from hue bridge: [%s]", str(result))
         
         except socket.timeout, e:
             logger.info('time out error: %s' % str(e))
@@ -583,8 +583,7 @@ class Bridge(object):
 
             for light in lights:
                 self.lights_by_id[int(light)] = Light(self, int(light))
-                self.lights_by_name[lights[light][
-                    'name']] = self.lights_by_id[int(light)]
+                self.lights_by_name[lights[light]['name']] = self.lights_by_id[int(light)]
         if mode == 'id':
             return self.lights_by_id
         if mode == 'name':
