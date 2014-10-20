@@ -457,18 +457,22 @@ class Bridge(object):
 
             if PY3K:
                 result = json.loads(str(result.read(), encoding='utf-8'))
-                if result:
-                    return result
-                else:
+                if result == None:
                     raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                elif len(result) == 0:
+                    raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                else:
+                    return result
             else:
                 result_str = result.read()
                 logger.debug(result_str)
                 result = json.loads(result_str)
-                if result:
-                    return result
-                else:
+                if result == None:
                     raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                elif len(result) == 0:
+                    raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                else:
+                    return result
         
         except socket.timeout, e:
             logger.info('time out error: %s' % str(e))
@@ -580,7 +584,11 @@ class Bridge(object):
         Set mode='id' for a dict by light ID, or mode='name' for a dict by light name.   """
         if self.lights_by_id == {}:
             lights = self.request('GET', '/api/' + self.username + '/lights/')
-
+            if lights == None:
+                raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+            elif len(lights) == 0:
+                raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                
             for light in lights:
                 self.lights_by_id[int(light)] = Light(self, int(light))
                 self.lights_by_name[lights[light]['name']] = self.lights_by_id[int(light)]
@@ -691,8 +699,10 @@ class Bridge(object):
             
             if result == '':
                 return result
-            elif result is None:
+            elif result == None:
                 return result
+            elif len(result) == 0:
+                return None
             elif 'error' in list(result[-1][0].keys()):
                 logger.warn("ERROR: {0} for light {1}".format(
                     result[-1][0]['error']['description'], light))
