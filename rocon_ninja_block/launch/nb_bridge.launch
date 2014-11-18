@@ -1,9 +1,0 @@
-<launch>
-  <!-- mandatory parameters -->
-  <arg name="hue_ip"                        default="192.168.10.143"/> <!-- IP of the Hue Bridge -->
-
-  <node pkg="rocon_hue" type="rocon_hue_bridge.py" name="rocon_hue_bridge">
-    <!-- parameters -->
-    <param name="hue_ip"                        value="$(arg hue_ip)"/>
-  </node>
-</launch>
