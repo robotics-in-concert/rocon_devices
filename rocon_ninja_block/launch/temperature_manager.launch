@@ -1,0 +1,13 @@
+<launch>
+  <arg name="set_color" default="set_color"/>
+  <arg name="hue_ip"                        default="192.168.10.114"/> <!-- IP of the Hue Bridge -->
+  
+  <node name="hue_bridge" pkg="rocon_hue" type="rocon_hue_bridge.py">
+  	<param name="hue_ip"                        value="$(arg hue_ip)"/>
+  </node>
+
+  <!--hue manager-->
+  <node name="hue_manager" pkg="rocon_hue" type="hue_manager.py">
+    <remap from="set_color" to="$(arg set_color)"/>
+  </node>  
+</launch>

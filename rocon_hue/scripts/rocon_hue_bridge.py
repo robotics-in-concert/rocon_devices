@@ -5,35 +5,36 @@
 #
 #################################################################################
 
-#sys
+# sys
 import threading
 import socket
 from urllib2 import urlopen, URLError, HTTPError
 
-#ros
+# ros
 import rospy
 from rocon_device_msgs.msg import HueState, Hue, HueArray
 
-#phue
+# phue
 from rocon_hue import Bridge
 from rocon_hue import PhueRegistrationException, PhueException
 
 
 class Rocon_Hue():
+
     def __init__(self):
         self.name = 'ros_hue'
         self.ip = None
         rospy.init_node(self.name)
-        
+
         self.bridge = Bridge()
-        
+
         if rospy.has_param('~hue_ip'):
             self.ip = rospy.get_param('~hue_ip')
             self.loginfo(self.ip)
         else:
             self.logwarn('No argument hue ip')
             return
-        
+
         self.bridge.set_ip_address(self.ip)
         self.hue_list_publisher = rospy.Publisher("hue_list", HueArray, latch=True, queue_size=10)
         rospy.Subscriber('set_hue_color_on', Hue, self.set_hue_color_on)
@@ -44,6 +45,8 @@ class Rocon_Hue():
 
         self.checker_th = threading.Thread(target=self.hue_checker)
         self.is_checking = True
+        self.retry_cnt = 0
+        self.retry_max_cnt = 5
         self.checker_th.start()
 
     def hue_checker(self):
@@ -53,19 +56,24 @@ class Rocon_Hue():
                     try:
                         self.bridge.connect()
                     except PhueRegistrationException as e:
-                        self.logwarn(e.message)
+                        self.logwarn_ex(e.message)
                     except PhueException as e:
-                        self.logwarn(e.message)
+                        self.logwarn_ex(e.message)
                     else:
                         self.loginfo("bridge connect")
+                        self.retry_cnt = 0
                         self.bridge.is_connect = True
                 else:
                     self.bulb_checker()
             else:
                 self.bridge.set_ip_address(self.ip)
                 self.bridge.is_connect = False
-                self.loginfo("bridge not connect %s"% self.ip)
-                pass
+                if self.retry_cnt < self.retry_max_cnt:
+                    self.retry_cnt += 1
+                elif self.retry_cnt == self.retry_max_cnt:
+                    self.retry_cnt += 1
+                    self.loginfo("No more logging about retrying to connect to bridge")
+                self.loginfo_ex("bridge not connect %s" % self.ip)
             rospy.sleep(5)
 
     def ping_checker(self):
@@ -76,16 +84,16 @@ class Rocon_Hue():
             urlopen(url, timeout=time_out)
 
         except HTTPError, e:
-            self.logwarn('The server can not fulfill the request. Reason: %s' % str(e.code))
+            self.logwarn_ex('The server can not fulfill the request. Reason: %s' % str(e.code))
             return False
         except URLError, e:
-            self.logwarn('failed to reach a server. Reason: %s' % str(e.reason))
+            self.logwarn_ex('failed to reach a server. Reason: %s' % str(e.reason))
             return False
         except socket.timeout, e:
-            self.logwarn('failed socket timeout. Reason: %s' % str(e))
+            self.logwarn_ex('failed socket timeout. Reason: %s' % str(e))
             return False
         except Exception, e:
-            self.logwarn('failed. Reason:%s' % str(e))
+            self.logwarn_ex('failed. Reason:%s' % str(e))
         else:
             return True
 
@@ -162,6 +170,14 @@ class Rocon_Hue():
 
     def logwarn(self, msg):
         rospy.logwarn('Rocon Hue : ' + str(msg))
+
+    def loginfo_ex(self, msg):
+        if self.retry_cnt < self.retry_max_cnt:
+            rospy.loginfo('Rocon Hue : ' + str(msg))
+
+    def logwarn_ex(self, msg):
+        if self.retry_cnt < self.retry_max_cnt:
+            rospy.logwarn('Rocon Hue : ' + str(msg))
 
     def spin(self):
         if self.ip is not None:
