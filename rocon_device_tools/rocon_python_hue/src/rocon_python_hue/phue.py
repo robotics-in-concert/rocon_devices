@@ -696,12 +696,7 @@ class Bridge(object):
                         converted_light = light
                 result.append(self.request('PUT', '/api/' + self.username + '/lights/' + str(
                     converted_light) + '/state', json.dumps(data)))
-            
-            if result == '':
-                return result
-            elif result == None:
-                return result
-            elif len(result) == 0:
+            if result == '' or result == None or len(result[-1]) == 0:
                 return None
             elif 'error' in list(result[-1][0].keys()):
                 logger.warn("ERROR: {0} for light {1}".format(
@@ -796,8 +791,8 @@ class Bridge(object):
                 result.append(self.request('PUT', '/api/' + self.username + '/groups/' + str(converted_group), json.dumps(data)))
             else:
                 result.append(self.request('PUT', '/api/' + self.username + '/groups/' + str(converted_group) + '/action', json.dumps(data)))
-        if result == '':
-            return result
+        if result == '' or result == None or len(result[-1]) == 0:
+            return None
         elif 'error' in list(result[-1][0].keys()):
             logger.warn("ERROR: {0} for group {1}".format(
                 result[-1][0]['error']['description'], group))
