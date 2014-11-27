@@ -521,6 +521,8 @@ class Bridge(object):
         registration_request = {"devicetype": "rocon_hue", "username": self.username}
         data = json.dumps(registration_request)
         response = self.request('POST', '/api', data)
+        if response == None:
+            raise PhueException(404, "No response from hue bridge")
         if len(response) is 0:
             raise PhueException(404, "No response from hue bridge")
 
@@ -585,9 +587,9 @@ class Bridge(object):
         if self.lights_by_id == {}:
             lights = self.request('GET', '/api/' + self.username + '/lights/')
             if lights == None:
-                raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                raise PhueException(404, "No response from hue bridge: [%s]", str(lights))
             elif len(lights) == 0:
-                raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                raise PhueException(404, "No response from hue bridge: [%s]", str(lights))
                 
             for light in lights:
                 self.lights_by_id[int(light)] = Light(self, int(light))
