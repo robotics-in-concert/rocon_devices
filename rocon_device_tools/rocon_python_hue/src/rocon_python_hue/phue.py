@@ -458,9 +458,9 @@ class Bridge(object):
             if PY3K:
                 result = json.loads(str(result.read(), encoding='utf-8'))
                 if result == None:
-                    raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                    raise PhueException(404, "No response from hue bridge in request: [%s]" % str(result))
                 elif len(result) == 0:
-                    raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                    raise PhueException(404, "No response from hue bridge in request: [%s]" % str(result))
                 else:
                     return result
             else:
@@ -468,9 +468,9 @@ class Bridge(object):
                 logger.debug(result_str)
                 result = json.loads(result_str)
                 if result == None:
-                    raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                    raise PhueException(404, "No response from hue bridge in request: [%s]" % str(result))
                 elif len(result) == 0:
-                    raise PhueException(404, "No response from hue bridge: [%s]", str(result))
+                    raise PhueException(404, "No response from hue bridge in request: [%s]" % str(result))
                 else:
                     return result
         
@@ -587,9 +587,9 @@ class Bridge(object):
         if self.lights_by_id == {}:
             lights = self.request('GET', '/api/' + self.username + '/lights/')
             if lights == None:
-                raise PhueException(404, "No response from hue bridge: [%s]", str(lights))
+                raise PhueException(404, "No response from hue bridge in get_light_objects")
             elif len(lights) == 0:
-                raise PhueException(404, "No response from hue bridge: [%s]", str(lights))
+                raise PhueException(404, "No response from hue bridge in get_light_objects")
                 
             for light in lights:
                 self.lights_by_id[int(light)] = Light(self, int(light))
