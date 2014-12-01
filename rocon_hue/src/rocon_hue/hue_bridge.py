@@ -15,39 +15,43 @@ import rospy
 from rocon_device_msgs.msg import HueState, Hue, HueArray
 
 # phue
-from rocon_hue import Bridge
-from rocon_hue import PhueRegistrationException, PhueException
+from rocon_python_hue import Bridge
+from rocon_python_hue import PhueRegistrationException, PhueException
 
 
-class Rocon_Hue():
+class RoconBridge():
+    MAX_HUE = 65535
+    MAX_SAT = 255
+    MAX_BRI = 255
 
-    def __init__(self):
+    def __init__(self, hue_ip='127.0.0.1'):
         self.name = 'ros_hue'
-        self.ip = None
-        rospy.init_node(self.name)
-
+        self.ip = hue_ip
         self.bridge = Bridge()
-
-        if rospy.has_param('~hue_ip'):
-            self.ip = rospy.get_param('~hue_ip')
-            self.loginfo(self.ip)
-        else:
-            self.logwarn('No argument hue ip')
-            return
-
         self.bridge.set_ip_address(self.ip)
-        self.hue_list_publisher = rospy.Publisher("hue_list", HueArray, latch=True, queue_size=10)
-        rospy.Subscriber('set_hue_color_on', Hue, self.set_hue_color_on)
-        rospy.Subscriber('set_hue_color_xy', Hue, self.set_hue_color_xy)
-        rospy.Subscriber('set_hue_color_hsv', Hue, self.set_hue_color_hsv)
-        rospy.Subscriber('set_hue_color_ct', Hue, self.set_hue_color_ct)
-        rospy.Subscriber('set_hue_color_mode', Hue, self.set_hue_color_mode)
+        self.hue_list_publisher = rospy.Publisher("list_hue", HueArray, latch=True, queue_size=10)
+
+        rospy.Subscriber('set_hue', Hue, self.set_hue)
 
         self.checker_th = threading.Thread(target=self.hue_checker)
         self.is_checking = True
         self.retry_cnt = 0
         self.retry_max_cnt = 5
         self.checker_th.start()
+        self.string2color = {}
+
+        self._init_color_lookup_table()
+
+    def _init_color_lookup_table(self):
+        self.string2color["OFF"] = (0, 0, 0, False)
+        self.string2color["WHITE"] = (0, 0, self.MAX_BRI, True)
+        self.string2color["GREEN"] = (self.MAX_HUE * 120 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["BLUE"] = (self.MAX_HUE * 240 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["YELLOW"] = (self.MAX_HUE * 60 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["ORANGE"] = (self.MAX_HUE * 30 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["PURPLE"] = (self.MAX_HUE * 300 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["INDIGO"] = (self.MAX_HUE * 240 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["CYAN"] = (self.MAX_HUE * 180 / 360, self.MAX_SAT, self.MAX_BRI, True)
 
     def hue_checker(self):
         while self.is_checking and not rospy.is_shutdown():
@@ -110,7 +114,6 @@ class Rocon_Hue():
                 hue.light_id = light_id
                 hue.name = state['name']
                 hue.state.on = state['state']['on']
-                hue.state.xy = state['state']['xy']
                 hue.state.hue = state['state']['hue']
                 hue.state.sat = state['state']['sat']
                 hue.state.bri = state['state']['bri']
@@ -118,52 +121,34 @@ class Rocon_Hue():
                 hues.hue_list.append(hue)
         self.hue_list_publisher.publish(hues)
 
-    def set_hue_color_on(self, data):
+    def set_hue(self, data):
         if self.bridge.is_connect:
             state = {}
-            state["on"] = data.state.on
-            self.bridge.set_light([data.light_id], state)
-
-    def set_hue_color_xy(self, data):
-        if self.bridge.is_connect:
-            state = {}
-            state["on"] = True
-            state["xy"] = data.state.xy
-            self.bridge.set_light([data.light_id], state)
-
-    def set_hue_color_hsv(self, data):
-        if self.bridge.is_connect:
-            state = {}
-            state["on"] = True
-            state["hue"] = data.state.hue
-            state["bri"] = data.state.bri
-            state["sat"] = data.state.sat
-            self.bridge.set_light([data.light_id], state)
-
-    def set_hue_color_ct(self, data):
-        if self.bridge.is_connect:
-            state = {}
-            state["on"] = True
-            state["ct"] = data.state.ct
-            self.bridge.set_light([data.light_id], state)
-
-    def set_hue_color_mode(self, data):
-        if self.bridge.is_connect:
-            state["on"] = True
-            state = {}
-            if data.state.mode == HueState().NONE:
-                state["alert"] = data.state.mode
-                state["effect"] = data.state.mode
-            elif data.state.mode == HueState().COLOR_LOOP:
-                state["alert"] = data.state.NONE
-                state["effect"] = data.state.mode
-            elif data.state.mode == HueState().SELECT or data.state.mode == HueState().LSELECT:
-                state["alert"] = data.state.mode
-                state["effect"] = data.state.NONE
+            if data.state.color:
+                (h, s, v, on) = self.get_color_from_string(data.state.color)
+                state['on'] = on
+                state['hue'] = h
+                state['sat'] = s
+                state['bri'] = v
             else:
-                state["alert"] = data.state.mode
-                state["effect"] = data.state.mode
+                state['on'] = data.state.on
+                if data.state.hue:
+                    state['on'] = True
+                    state['hue'] = data.state.hue
+                if data.state.sat:
+                    state['on'] = True
+                    state['sat'] = data.state.sat
+                if data.state.bri:
+                    state['on'] = True
+                    state['bri'] = data.state.bri
             self.bridge.set_light([data.light_id], state)
+
+    def get_color_from_string(self, color):
+        try:
+            return self.string2color[color]
+        except KeyError as e:
+            logerr("Unsupported Color! Set it to WHITE")
+            return self.string2color["WHITE"]
 
     def loginfo(self, msg):
         rospy.loginfo('Rocon Hue : ' + str(msg))
@@ -190,7 +175,3 @@ class Rocon_Hue():
             self.checker_th.join(1)
         else:
             self.logwarn('Rocon Hue : Must set hue ip')
-
-if __name__ == '__main__':
-    rh = Rocon_Hue()
-    rh.spin()

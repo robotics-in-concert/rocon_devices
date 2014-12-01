@@ -4,4 +4,5 @@
 #   https://raw.github.com/robotics-in-concert/rocon_devices/license/LICENSE
 #
 #################################################################################
-from .hue_bridge import *
+from .phue import *
+from .exceptions import *
