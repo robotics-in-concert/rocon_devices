@@ -38,6 +38,20 @@ class RoconBridge():
         self.retry_cnt = 0
         self.retry_max_cnt = 5
         self.checker_th.start()
+        self.string2color = {}
+
+        self._init_color_lookup_table()
+
+    def _init_color_lookup_table(self):
+        self.string2color["OFF"] = (0, 0, 0, False)
+        self.string2color["WHITE"] = (0, 0, self.MAX_BRI, True)
+        self.string2color["GREEN"] = (self.MAX_HUE * 120 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["BLUE"] = (self.MAX_HUE * 240 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["YELLOW"] = (self.MAX_HUE * 60 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["ORANGE"] = (self.MAX_HUE * 30 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["PURPLE"] = (self.MAX_HUE * 300 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["INDIGO"] = (self.MAX_HUE * 240 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["CYAN"] = (self.MAX_HUE * 180 / 360, self.MAX_SAT, self.MAX_BRI, True)
 
     def hue_checker(self):
         while self.is_checking and not rospy.is_shutdown():
@@ -130,29 +144,11 @@ class RoconBridge():
             self.bridge.set_light([data.light_id], state)
 
     def get_color_from_string(self, color):
-        h = s = v = 0
-        on = True
-        if color == "OFF":
-            (h, s, v, on) = (0, 0, 0, False)
-        elif color == "WHITE":
-            (h, s, v, on) = (0, 0, self.MAX_BRI, True)
-        elif color == "RED":
-            (h, s, v, on) = (self.MAX_HUE, self.MAX_SAT, self.MAX_BRI, True)
-        elif color == "GREEN":
-            (h, s, v, on) = (self.MAX_HUE * 120 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        elif color == "BLUE":
-            (h, s, v, on) = (self.MAX_HUE * 240 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        elif color == "YELLOW":
-            (h, s, v, on) = (self.MAX_HUE * 60 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        elif color == "ORANGE":
-            (h, s, v, on) = (self.MAX_HUE * 30 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        elif color == "PURPLE":
-            (h, s, v, on) = (self.MAX_HUE * 300 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        elif color == "INDIGO":
-            (h, s, v, on) = (self.MAX_HUE * 240 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        elif color == "CYAN":
-            (h, s, v, on) = (self.MAX_HUE * 180 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        return (h, s, v, on)
+        try:
+            return self.string2color[color]
+        except KeyError as e:
+            logerr("Unsupported Color! Set it to WHITE")
+            return self.string2color["WHITE"]
 
     def loginfo(self, msg):
         rospy.loginfo('Rocon Hue : ' + str(msg))
