@@ -17,5 +17,6 @@
   <run_depend>rospy</run_depend>
 
   <export>
+    <rocon_app>rapps/hue_bridge/hue_bridge.rapp</rocon_app>
   </export>
 </package>

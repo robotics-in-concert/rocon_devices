@@ -43,15 +43,18 @@ class RoconBridge():
         self._init_color_lookup_table()
 
     def _init_color_lookup_table(self):
+        hue_angle = lambda angle: self.MAX_HUE * angle / 360
+
         self.string2color["OFF"] = (0, 0, 0, False)
-        self.string2color["WHITE"] = (0, 0, self.MAX_BRI, True)
-        self.string2color["GREEN"] = (self.MAX_HUE * 120 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["BLUE"] = (self.MAX_HUE * 240 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["YELLOW"] = (self.MAX_HUE * 60 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["ORANGE"] = (self.MAX_HUE * 30 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["PURPLE"] = (self.MAX_HUE * 300 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["INDIGO"] = (self.MAX_HUE * 240 / 360, self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["CYAN"] = (self.MAX_HUE * 180 / 360, self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["WHITE"] = (hue_angle(0), 0, self.MAX_BRI, True)
+        self.string2color["RED"] = (hue_angle(360), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["GREEN"] = (hue_angle(120), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["BLUE"] = (hue_angle(240), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["YELLOW"] = (hue_angle(60), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["ORANGE"] = (hue_angle(30), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["PURPLE"] = (hue_angle(300), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["INDIGO"] = (hue_angle(240), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["CYAN"] = (hue_angle(180), self.MAX_SAT, self.MAX_BRI, True)
 
     def hue_checker(self):
         while self.is_checking and not rospy.is_shutdown():
@@ -147,7 +150,7 @@ class RoconBridge():
         try:
             return self.string2color[color]
         except KeyError as e:
-            logerr("Unsupported Color! Set it to WHITE")
+            self.loginfo("Unsupported Color! Set it to WHITE")
             return self.string2color["WHITE"]
 
     def loginfo(self, msg):

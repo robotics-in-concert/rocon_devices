@@ -1,0 +1,6 @@
+<launch>
+  <arg name="hue_ip"    default="192.168.10.27"/> 
+  <include file="$(find rocon_hue)/launch/hue_bridge_server.launch">
+    <arg name="hue_ip" value="$(arg hue_ip)"/>
+  </include>
+</launch>

@@ -1,0 +1,9 @@
+subscribers:
+  - name: set_hue
+    type: rocon_device_msgs/Hue
+publishers: 
+  - name: list_hue
+    type: rocon_device_msgs/HueArray
+services: []
+action_clients: []
+action_servers: []
