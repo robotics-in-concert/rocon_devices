@@ -52,7 +52,7 @@ class RoconBridge():
         self.string2color["BLUE"] = (hue_angle(260), self.MAX_SAT, self.MAX_BRI, True)
         self.string2color["YELLOW"] = (hue_angle(130), self.MAX_SAT, self.MAX_BRI, True)
         self.string2color["ORANGE"] = (hue_angle(70), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["MAGENTA"] = (hue_angle(30), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["MAGENTA"] = (hue_angle(307), self.MAX_SAT, self.MAX_BRI, True)
         self.string2color["VIOLET"] = (hue_angle(280), self.MAX_SAT, self.MAX_BRI, True)
 
     def hue_checker(self):
