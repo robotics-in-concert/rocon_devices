@@ -48,13 +48,12 @@ class RoconBridge():
         self.string2color["OFF"] = (0, 0, 0, False)
         self.string2color["WHITE"] = (hue_angle(0), 0, self.MAX_BRI, True)
         self.string2color["RED"] = (hue_angle(360), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["GREEN"] = (hue_angle(120), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["BLUE"] = (hue_angle(240), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["YELLOW"] = (hue_angle(60), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["ORANGE"] = (hue_angle(30), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["PURPLE"] = (hue_angle(300), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["INDIGO"] = (hue_angle(240), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["CYAN"] = (hue_angle(180), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["GREEN"] = (hue_angle(140), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["BLUE"] = (hue_angle(260), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["YELLOW"] = (hue_angle(130), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["ORANGE"] = (hue_angle(70), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["MAGENTA"] = (hue_angle(30), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color["VIOLET"] = (hue_angle(335), self.MAX_SAT, self.MAX_BRI, True)
 
     def hue_checker(self):
         while self.is_checking and not rospy.is_shutdown():
