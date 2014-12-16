@@ -37,3 +37,5 @@ Example)
 ```
 
 The predefiend color list is described at [HueState](https://github.com/robotics-in-concert/rocon_msgs/blob/indigo/rocon_device_msgs/msg/HueState.msg)
+
+If you want to handle the multiple hue light, you should use the wire network. Beacause hue is controlled by rest api. If they is used in wireless, they are not chaged color even though you publish the ```set_hue``` message.
