@@ -39,6 +39,7 @@ class RoconBridge():
         self.retry_max_cnt = 5
         self.checker_th.start()
         self.string2color = {}
+        self.hues = None
 
         self._init_color_lookup_table()
 
@@ -104,24 +105,29 @@ class RoconBridge():
             return True
 
     def bulb_checker(self):
-        light_ids = self.bridge.get_light_objects(mode='id')
-        hues = HueArray()
-        for light_id in light_ids:
-            state = self.bridge.get_light(light_id)
-            if not state:
-                self.logwarn('response is None')
-                continue
-            elif state is not "":
-                hue = Hue()
-                hue.light_id = light_id
-                hue.name = state['name']
-                hue.state.on = state['state']['on']
-                hue.state.hue = state['state']['hue']
-                hue.state.sat = state['state']['sat']
-                hue.state.bri = state['state']['bri']
-                hue.state.reachable = state['state']['reachable']
-                hues.hue_list.append(hue)
-        self.hue_list_publisher.publish(hues)
+        try:
+            light_ids = self.bridge.get_light_objects(mode='id')
+            hues = HueArray()
+            for light_id in light_ids:
+                state = self.bridge.get_light(light_id)
+                if not state:
+                    self.logwarn('response is None')
+                    continue
+                elif state is not "":
+                    hue = Hue()
+                    hue.light_id = light_id
+                    hue.name = state['name']
+                    hue.state.on = state['state']['on']
+                    hue.state.hue = state['state']['hue']
+                    hue.state.sat = state['state']['sat']
+                    hue.state.bri = state['state']['bri']
+                    hue.state.reachable = state['state']['reachable']
+                    hues.hue_list.append(hue)
+            self.hues = hues
+        except Exception, e:
+            self.logwarn_ex('failed. Reason:%s' % str(e))
+        else:
+            self.hue_list_publisher.publish(self.hues)
 
     def set_hue(self, data):
         if self.bridge.is_connect:
