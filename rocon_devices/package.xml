@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rocon_devices</name>
-  <version>0.1.0</version>
+  <version>0.0.0</version>
   <description>
     rocon devices meta package
   </description>
@@ -14,6 +14,9 @@
   <author email="dwlee@yujinrobot.com">DongWook Lee</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>rocon_python_phue</run_depend>
+  <run_depend>rocon_hue</run_depend>
+  <run_depend>rtsp_camera_driver</run_depend>
   <export>
     <metapackage/>
   </export>
