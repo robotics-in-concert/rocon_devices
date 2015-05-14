@@ -16,7 +16,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>rocon_python_phue</run_depend>
   <run_depend>rocon_hue</run_depend>
-  <run_depend>rtsp_camera_driver</run_depend>
+  <run_depend>rocon_rtsp_camera_relay</run_depend>
   <export>
     <metapackage/>
   </export>
