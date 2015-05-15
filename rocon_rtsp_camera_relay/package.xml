@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package>
+  <name>rocon_rtsp_camera_relay</name>
+  <version>0.0.0</version>
+  <description>
+    RTSP camera relay node converts rtsp camera stream from ip camera to ros image message
+  </description>
+
+  <maintainer email="dwlee@yujinrobot.com">Dongwook Lee</maintainer>
+
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>image_transport</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>cv_bridge</run_depend>
+  <run_depend>image_transport</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+
+  <export>
+    <rocon_app>rapps/rtsp_camera_relay/rtsp_camera_relay</rocon_app>
+  </export>
+</package>
