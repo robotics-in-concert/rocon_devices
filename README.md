@@ -7,13 +7,13 @@ A collection of device drivers involved in rocon
 
 For controlling PHILIPS hue by ros topic.
 
-First, connect the bridge in your local network. The user have to get the hue bridge ip from [meethue](https://www.meethue.com/api/nupnp) and set the hue ip in roslauch file.
+First, connect the bridge in your local network. The user have to get the hue bridge ip from [meethue](https://www.meethue.com/api/nupnp).
 After above process, run the hue bridge by following command
 ```
-> roslaunch rocon_hue hue_bridge_server.launch --screen
+> roslaunch rocon_hue hue_bridge_server.launch --screen hue_ip:=<bridge ip>
 ```
 
-If hue bridge connection is alright, you can see the this message.
+You can see the this message, when hue bridge connection is success.
 
 ```
 [INFO] [WallTime: 1397022783.781245] bridge connect
