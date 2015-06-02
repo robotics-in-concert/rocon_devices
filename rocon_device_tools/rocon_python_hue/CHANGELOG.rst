@@ -2,8 +2,8 @@
 Changelog for package rocon_python_hue
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.1 (2015-06-02)
+------------------
 * release preparation
 * update exception handler for  no result
 * fix wron exception logging

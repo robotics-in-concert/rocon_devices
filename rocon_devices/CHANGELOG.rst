@@ -2,8 +2,8 @@
 Changelog for package rocon_devices
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.1 (2015-06-02)
+------------------
 * release preparation
 * rename rtsp_camera_driver to rocon_rtsp_camera_relay closes `#33 <https://github.com/robotics-in-concert/rocon_devices/issues/33>`_
 * update package.xml to include all packages as run depend. closes `#32 <https://github.com/robotics-in-concert/rocon_devices/issues/32>`_

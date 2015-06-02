@@ -2,8 +2,8 @@
 Changelog for package rocon_hue
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.1 (2015-06-02)
+------------------
 * release preparation
 * rtsp camera relay package ready
 * update bulb checker
