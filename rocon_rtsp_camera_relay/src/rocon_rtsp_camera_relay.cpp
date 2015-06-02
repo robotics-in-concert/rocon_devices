@@ -59,6 +59,7 @@ void RoconRtspCameraRelay::spin()
   cv::Mat mat;
   sensor_msgs::CameraInfo ci;
   sensor_msgs::Image ros_img;
+  std_msgs::String ros_str;
 
   while(ros::ok())
   {
@@ -69,11 +70,13 @@ void RoconRtspCameraRelay::spin()
     else {
       status_ = "live";
     }
+
+    ros_str.data = status_;
     
     convertCvToRosImg(mat, ros_img, ci);
     pub_video_.publish(ros_img);
     pub_camera_info_.publish(ci);
-    pub_status_.publish(status_);
+    pub_status_.publish(ros_str);
     cv::waitKey(1);
   }
 }
