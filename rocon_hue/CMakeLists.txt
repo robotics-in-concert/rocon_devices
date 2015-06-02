@@ -22,8 +22,15 @@ roslint_python(${${PROJECT_NAME}_MODULE_SOURCES} ${${PROJECT_NAME}_SCRIPT_SOURCE
 # Installs
 ##############################################################################
 install(
-    PROGRAMS 
-        scripts/rocon_hue_bridge.py
-        scripts/hue_manager.py
+    PROGRAMS
+        scripts/server.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
     )
+
+install(DIRECTORY rapps
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(DIRECTORY launch
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)

@@ -2,18 +2,20 @@
 <package>
   <name>rocon_python_hue</name>
   <version>0.0.0</version>
-  <description>The rocon_python_hue package</description>
+  <description>
+    The patched version of phue(r7) wrapper
+    - Create the exception.py and move the exception class
+    - Add the "reachable" flag.
+      Possible to get the each bulb validation.
+    - Connection method change.
+      No more use the user name. The user name is pre-define to "newdeveloper". It has the all permission of hue restapi.
+  </description>
 
-  <maintainer email="dwlee@yujinrobot.com">dwlee</maintainer>
+  <maintainer email="dwlee@yujinrobot.com">Dongwook Lee</maintainer>
   <url type="website">https://github.com/studioimaginaire/phue</url>
   <url type="repository">https://github.com/robotics-in-concert/rocon_devices</url>
   <url type="bugtracker">https://github.com/robotics-in-concert/rocon_devices/issues</url>
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>rospy</build_depend>
-  <run_depend>rospy</run_depend>
-
-  <export>
-  </export>
 </package>

@@ -8,13 +8,13 @@
   <maintainer email="dwlee@yujinrobot.com">DongWook Lee</maintainer>
   <license>BSD</license>
   
-  <url type="website"></url>
+  <url type="website">http://wiki.ros.org/rocon_devices</url>
   <url type="repository">https://github.com/robotics-in-concert/rocon_devices</url>
   <url type="bugtracker">https://github.com/robotics-in-concert/rocon_devices/issues</url>
-  <author email="dwlee@yujinrobot.com">DongWook Lee</author>
+  <author>DongWook Lee</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <run_depend>rocon_python_phue</run_depend>
+  <run_depend>rocon_python_hue</run_depend>
   <run_depend>rocon_hue</run_depend>
   <run_depend>rocon_rtsp_camera_relay</run_depend>
   <export>
