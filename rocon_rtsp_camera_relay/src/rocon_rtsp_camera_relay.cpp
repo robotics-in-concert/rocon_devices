@@ -20,8 +20,8 @@ RoconRtspCameraRelay::~RoconRtspCameraRelay()
   vcap_.release();
 }
 
-bool RoconRtspCameraRelay::init(const std::string video_stream_url,const std::string user,const std::string password) {
-  video_stream_address_ = "rtsp://" + user + ":" + password + "@" + video_stream_url;
+bool RoconRtspCameraRelay::init(const std::string video_stream_url) {
+  video_stream_address_ = video_stream_url;
 
   if (!vcap_.open(video_stream_address_)) 
     return false; 
@@ -29,10 +29,10 @@ bool RoconRtspCameraRelay::init(const std::string video_stream_url,const std::st
     return true;
 }
 
-bool RoconRtspCameraRelay::reset(const std::string video_stream_url,const std::string user,const std::string password)
+bool RoconRtspCameraRelay::reset(const std::string video_stream_url)
 {
   vcap_.release();
-  return init(video_stream_url, user, password); 
+  return init(video_stream_url);
 }
 
 /*

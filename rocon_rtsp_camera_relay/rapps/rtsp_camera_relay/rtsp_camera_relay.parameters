@@ -1,3 +1,1 @@
-video_stream_url: localhost:88/videoMain
-user: yujin
-password: robot
+video_stream_url: "rtsp://yujin:yujin@localhost:88/videoMain"

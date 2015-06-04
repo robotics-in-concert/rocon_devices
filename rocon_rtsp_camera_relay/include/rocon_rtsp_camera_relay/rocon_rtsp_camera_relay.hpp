@@ -21,8 +21,8 @@ class RoconRtspCameraRelay {
     RoconRtspCameraRelay(ros::NodeHandle& n);
     ~RoconRtspCameraRelay();
 
-    bool init(const std::string video_stream_url,const std::string user,const std::string password);
-    bool reset(const std::string video_stream_url,const std::string user,const std::string password);
+    bool init(const std::string video_stream_url);
+    bool reset(const std::string video_stream_url);
 
     void spin();
   
