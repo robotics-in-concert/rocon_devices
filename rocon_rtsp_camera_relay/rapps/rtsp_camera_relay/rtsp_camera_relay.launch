@@ -1,11 +1,7 @@
 <launch>
   <arg name="video_stream_url"/>
-  <arg name="user"/>
-  <arg name="password"/>
   <node pkg="rocon_rtsp_camera_relay" name="rtsp_camera_relay" type="rocon_rtsp_camera_relay_node">
     <param name="video_stream_url"    value="$(arg video_stream_url)"/>
-    <param name="user"                value="$(arg user)"/>
-    <param name="password"            value="$(arg password)"/>
   </node>
 
   <!-- Relaying topics to use as public interface -->
