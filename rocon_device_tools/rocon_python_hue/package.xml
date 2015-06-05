@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rocon_python_hue</name>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   <description>
     The patched version of phue(r7) wrapper
     - Create the exception.py and move the exception class
