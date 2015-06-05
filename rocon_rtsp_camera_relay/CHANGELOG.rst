@@ -2,8 +2,8 @@
 Changelog for package rocon_rtsp_camera_relay
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.2 (2015-06-05)
+------------------
 * Merge pull request `#38 <https://github.com/robotics-in-concert/rocon_devices/issues/38>`_ from robotics-in-concert/video_url
   remove user pw field and use only video stream url param to access ca…
 * remove user pw field and use only video stream url param to access camera
