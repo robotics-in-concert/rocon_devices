@@ -2,5 +2,5 @@ display: Rtsp Camera Relay
 description: Relays video stream from rtsp camera to ros
 author: Dongwook Lee
 compatibility: rocon:/
-launch: rtsp_camera_relay.launch
+launch: rtsp_camera_relay.launch.xml
 public_interface: rtsp_camera_relay.interface
