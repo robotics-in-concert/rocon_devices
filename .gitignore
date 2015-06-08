@@ -92,3 +92,5 @@ nosetests.xml
 *.cache
 
 >>>>>>> roshue
+*.swp
+*.swo

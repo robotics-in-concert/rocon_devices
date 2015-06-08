@@ -1,6 +1,5 @@
 display: Hue Bridge 
 description: The bridge for getting bulb status and contollering
-author: Dongwook Lee
 compatibility: rocon:/pc
 launch: hue_bridge.launch
 public_interface: hue_bridge.interface

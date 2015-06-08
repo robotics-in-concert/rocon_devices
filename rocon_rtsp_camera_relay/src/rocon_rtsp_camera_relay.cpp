@@ -20,8 +20,8 @@ RoconRtspCameraRelay::~RoconRtspCameraRelay()
   vcap_.release();
 }
 
-bool RoconRtspCameraRelay::init(const std::string video_stream_url,const std::string user,const std::string password) {
-  video_stream_address_ = "rtsp://" + user + ":" + password + "@" + video_stream_url;
+bool RoconRtspCameraRelay::init(const std::string video_stream_url) {
+  video_stream_address_ = video_stream_url;
 
   if (!vcap_.open(video_stream_address_)) 
     return false; 
@@ -29,10 +29,10 @@ bool RoconRtspCameraRelay::init(const std::string video_stream_url,const std::st
     return true;
 }
 
-bool RoconRtspCameraRelay::reset(const std::string video_stream_url,const std::string user,const std::string password)
+bool RoconRtspCameraRelay::reset(const std::string video_stream_url)
 {
   vcap_.release();
-  return init(video_stream_url, user, password); 
+  return init(video_stream_url);
 }
 
 /*
@@ -59,6 +59,7 @@ void RoconRtspCameraRelay::spin()
   cv::Mat mat;
   sensor_msgs::CameraInfo ci;
   sensor_msgs::Image ros_img;
+  std_msgs::String ros_str;
 
   while(ros::ok())
   {
@@ -69,11 +70,13 @@ void RoconRtspCameraRelay::spin()
     else {
       status_ = "live";
     }
+
+    ros_str.data = status_;
     
     convertCvToRosImg(mat, ros_img, ci);
     pub_video_.publish(ros_img);
     pub_camera_info_.publish(ci);
-    pub_status_.publish(status_);
+    pub_status_.publish(ros_str);
     cv::waitKey(1);
   }
 }

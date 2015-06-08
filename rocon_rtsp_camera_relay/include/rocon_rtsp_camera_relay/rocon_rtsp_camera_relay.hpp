@@ -13,6 +13,8 @@
 #include<std_msgs/String.h>
 #include<image_transport/image_transport.h>
 #include<sensor_msgs/image_encodings.h>
+#include<sensor_msgs/Image.h>
+#include<sensor_msgs/CameraInfo.h>
 
 namespace rocon {
 
@@ -21,8 +23,8 @@ class RoconRtspCameraRelay {
     RoconRtspCameraRelay(ros::NodeHandle& n);
     ~RoconRtspCameraRelay();
 
-    bool init(const std::string video_stream_url,const std::string user,const std::string password);
-    bool reset(const std::string video_stream_url,const std::string user,const std::string password);
+    bool init(const std::string video_stream_url);
+    bool reset(const std::string video_stream_url);
 
     void spin();
   
