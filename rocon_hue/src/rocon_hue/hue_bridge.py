@@ -7,9 +7,8 @@
 
 # sys
 import threading
-import socket
-from urllib2 import urlopen, URLError, HTTPError
-import os
+import subprocess
+
 # ros
 import rospy
 from rocon_device_msgs.msg import HueState, Hue, HueArray
@@ -29,7 +28,7 @@ class RoconBridge():
         self.ip = hue_ip
         self.bridge = Bridge()
         self.bridge.set_ip_address(self.ip)
-        self.hue_list_publisher = rospy.Publisher("list_hue", HueArray, latch=True, queue_size=10)
+        self.hue_list_publisher = rospy.Publisher('list_hue', HueArray, latch=True, queue_size=10)
 
         rospy.Subscriber('set_hue', Hue, self.set_hue)
 
@@ -46,15 +45,15 @@ class RoconBridge():
     def _init_color_lookup_table(self):
         hue_angle = lambda angle: self.MAX_HUE * angle / 360
 
-        self.string2color["OFF"] = (0, 0, 0, False)
-        self.string2color["WHITE"] = (hue_angle(0), 0, self.MAX_BRI, True)
-        self.string2color["RED"] = (hue_angle(360), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["GREEN"] = (hue_angle(140), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["BLUE"] = (hue_angle(260), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["YELLOW"] = (hue_angle(130), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["ORANGE"] = (hue_angle(70), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["MAGENTA"] = (hue_angle(307), self.MAX_SAT, self.MAX_BRI, True)
-        self.string2color["VIOLET"] = (hue_angle(280), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color['OFF'] = (0, 0, 0, False)
+        self.string2color['WHITE'] = (hue_angle(0), 0, self.MAX_BRI, True)
+        self.string2color['RED'] = (hue_angle(360), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color['GREEN'] = (hue_angle(140), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color['BLUE'] = (hue_angle(260), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color['YELLOW'] = (hue_angle(130), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color['ORANGE'] = (hue_angle(70), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color['MAGENTA'] = (hue_angle(307), self.MAX_SAT, self.MAX_BRI, True)
+        self.string2color['VIOLET'] = (hue_angle(280), self.MAX_SAT, self.MAX_BRI, True)
 
     def hue_checker(self):
         while self.is_checking and not rospy.is_shutdown():
@@ -67,48 +66,27 @@ class RoconBridge():
                     except PhueException as e:
                         self.logwarn_ex(e.message)
                     else:
-                        self.loginfo("bridge connect")
+                        self.loginfo('bridge connect')
                         self.retry_cnt = 0
                         self.bridge.is_connect = True
                 else:
                     self.bulb_checker()
             else:
-                self.bridge.set_ip_address(self.ip)
                 self.bridge.is_connect = False
                 if self.retry_cnt < self.retry_max_cnt:
                     self.retry_cnt += 1
                 elif self.retry_cnt == self.retry_max_cnt:
                     self.retry_cnt += 1
-                    self.loginfo("No more logging about retrying to connect to bridge")
-                self.loginfo_ex("bridge not connect %s" % self.ip)
+                    self.loginfo('No more display log regarding retrying to connect to bridge')
+                self.loginfo_ex('bridge not connect %s' % self.ip)
             rospy.sleep(5)
 
     def ping_checker(self):
-        # chanage os.system into subprocess
-        response = os.system("ping -c 1 " + self.ip)
+        response = subprocess.call(['ping', '-c', '1', self.ip], stdout=subprocess.PIPE,)
         if response == 0:
             return True
         else:
-            return True
-        # time_out = 4  # 3secend
-        # socket.setdefaulttimeout(time_out)  # timeout in seconds
-        # try:
-        #     url = "http://" + str(self.ip)
-        #     urlopen(url, timeout=time_out)
-
-        # except HTTPError, e:
-        #     self.logwarn_ex('The server can not fulfill the request. Reason: %s' % str(e.code))
-        #     return False
-        # except URLError, e:
-        #     self.logwarn_ex('failed to reach a server. Reason: %s' % str(e.reason))
-        #     return False
-        # except socket.timeout, e:
-        #     self.logwarn_ex('failed socket timeout. Reason: %s' % str(e))
-        #     return False
-        # except Exception, e:
-        #     self.logwarn_ex('failed. Reason:%s' % str(e))
-        # else:
-        #     return True
+            return False
 
     def bulb_checker(self):
         try:
@@ -117,13 +95,12 @@ class RoconBridge():
             for light_id in light_ids:
                 state = self.bridge.get_light(light_id)
                 if not state:
-                    #self.logwarn('Light Id [%s]`s response is None' % str(light_id))
                     continue
-                elif state is not "":
+                elif state is not '':
                     hue = Hue()
                     hue.light_id = light_id
                     hue.name = state['name']
-                    #hue.state.on = state['state']['on']
+                    hue.state.on = state['state']['on']
                     hue.state.hue = state['state']['hue']
                     hue.state.sat = state['state']['sat']
                     hue.state.bri = state['state']['bri']
@@ -136,19 +113,20 @@ class RoconBridge():
             self.hue_list_publisher.publish(self.hues)
 
     def set_hue(self, data):
-        self.loginfo(str(data.light_id) + ": " + str(data.state.color))
+        self.loginfo(str(data.light_id) + ': ' + str(data.state.color))
         if self.bridge.is_connect:
-            state = {}
+            state = self.bridge.get_light(data.light_id)
             if data.state.color:
-                state = self.bridge.get_light(data.light_id)
                 (h, s, v, on) = self.get_color_from_string(data.state.color)
                 if not state['state']['on']:
                     state['on'] = on
+                state['on'] = on
                 state['hue'] = h
                 state['sat'] = s
                 state['bri'] = v
             else:
-                state['on'] = data.state.on
+                if not state['state']['on']:
+                    state['on'] = on
                 if data.state.hue:
                     state['on'] = True
                     state['hue'] = data.state.hue
@@ -159,14 +137,13 @@ class RoconBridge():
                     state['on'] = True
                     state['bri'] = data.state.bri
             self.bridge.set_light([data.light_id], state)
-        rospy.sleep(0.5)
 
     def get_color_from_string(self, color):
         try:
             return self.string2color[color]
         except KeyError as e:
-            self.loginfo("Unsupported Color! Set it to WHITE")
-            return self.string2color["WHITE"]
+            self.loginfo('Unsupported Color! Set it to WHITE')
+            return self.string2color['WHITE']
 
     def loginfo(self, msg):
         rospy.loginfo('Rocon Hue : ' + str(msg))
@@ -192,4 +169,4 @@ class RoconBridge():
             self.is_checking = False
             self.checker_th.join(1)
         else:
-            self.logwarn('Rocon Hue : Must set hue ip')
+            self.logwarn('Must set hue ip')
