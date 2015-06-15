@@ -9,7 +9,7 @@
 import threading
 import socket
 from urllib2 import urlopen, URLError, HTTPError
-
+import os
 # ros
 import rospy
 from rocon_device_msgs.msg import HueState, Hue, HueArray
@@ -84,25 +84,31 @@ class RoconBridge():
             rospy.sleep(5)
 
     def ping_checker(self):
-        time_out = 2  # 3secend
-        socket.setdefaulttimeout(time_out)  # timeout in seconds
-        try:
-            url = "http://" + str(self.ip)
-            urlopen(url, timeout=time_out)
-
-        except HTTPError, e:
-            self.logwarn_ex('The server can not fulfill the request. Reason: %s' % str(e.code))
-            return False
-        except URLError, e:
-            self.logwarn_ex('failed to reach a server. Reason: %s' % str(e.reason))
-            return False
-        except socket.timeout, e:
-            self.logwarn_ex('failed socket timeout. Reason: %s' % str(e))
-            return False
-        except Exception, e:
-            self.logwarn_ex('failed. Reason:%s' % str(e))
+        # chanage os.system into subprocess
+        response = os.system("ping -c 1 " + self.ip)
+        if response == 0:
+            return True
         else:
             return True
+        # time_out = 4  # 3secend
+        # socket.setdefaulttimeout(time_out)  # timeout in seconds
+        # try:
+        #     url = "http://" + str(self.ip)
+        #     urlopen(url, timeout=time_out)
+
+        # except HTTPError, e:
+        #     self.logwarn_ex('The server can not fulfill the request. Reason: %s' % str(e.code))
+        #     return False
+        # except URLError, e:
+        #     self.logwarn_ex('failed to reach a server. Reason: %s' % str(e.reason))
+        #     return False
+        # except socket.timeout, e:
+        #     self.logwarn_ex('failed socket timeout. Reason: %s' % str(e))
+        #     return False
+        # except Exception, e:
+        #     self.logwarn_ex('failed. Reason:%s' % str(e))
+        # else:
+        #     return True
 
     def bulb_checker(self):
         try:
@@ -111,13 +117,13 @@ class RoconBridge():
             for light_id in light_ids:
                 state = self.bridge.get_light(light_id)
                 if not state:
-                    self.logwarn('response is None')
+                    #self.logwarn('Light Id [%s]`s response is None' % str(light_id))
                     continue
                 elif state is not "":
                     hue = Hue()
                     hue.light_id = light_id
                     hue.name = state['name']
-                    hue.state.on = state['state']['on']
+                    #hue.state.on = state['state']['on']
                     hue.state.hue = state['state']['hue']
                     hue.state.sat = state['state']['sat']
                     hue.state.bri = state['state']['bri']
@@ -130,11 +136,14 @@ class RoconBridge():
             self.hue_list_publisher.publish(self.hues)
 
     def set_hue(self, data):
+        self.loginfo(str(data.light_id) + ": " + str(data.state.color))
         if self.bridge.is_connect:
             state = {}
             if data.state.color:
+                state = self.bridge.get_light(data.light_id)
                 (h, s, v, on) = self.get_color_from_string(data.state.color)
-                state['on'] = on
+                if not state['state']['on']:
+                    state['on'] = on
                 state['hue'] = h
                 state['sat'] = s
                 state['bri'] = v
@@ -150,6 +159,7 @@ class RoconBridge():
                     state['on'] = True
                     state['bri'] = data.state.bri
             self.bridge.set_light([data.light_id], state)
+        rospy.sleep(0.5)
 
     def get_color_from_string(self, color):
         try:
@@ -176,7 +186,7 @@ class RoconBridge():
         if self.ip is not None:
             while not rospy.is_shutdown():
                 try:
-                    rospy.sleep(0.01)
+                    rospy.sleep(1)
                 except:
                     break
             self.is_checking = False
