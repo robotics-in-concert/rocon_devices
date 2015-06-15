@@ -2,8 +2,8 @@
 Changelog for package rocon_rtsp_camera_relay
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.4 (2015-06-15)
+------------------
 * Merge branch 'indigo' into rename_rapp_launcher
 * rename rapp launcher closes `#40 <https://github.com/robotics-in-concert/rocon_devices/issues/40>`_
 * Contributors: Jihoon Lee
