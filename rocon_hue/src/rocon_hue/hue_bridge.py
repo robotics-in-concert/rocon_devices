@@ -163,7 +163,7 @@ class RoconBridge():
         if self.ip is not None:
             while not rospy.is_shutdown():
                 try:
-                    rospy.sleep(1)
+                    rospy.sleep(0.1)
                 except:
                     break
             self.is_checking = False
