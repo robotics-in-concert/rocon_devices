@@ -1,0 +1,6 @@
+display: Rtsp Camera Relay Remote 
+description: Relays video stream from rtsp camera to ros. Also teleoperable
+compatibility: rocon:/pc
+launch: rtsp_camera_relay.launch.xml
+public_parameters: rtsp_camera_relay.parameters
+parent_name: rocon_apps/video_teleop
