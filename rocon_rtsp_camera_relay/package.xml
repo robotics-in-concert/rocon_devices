@@ -23,6 +23,6 @@
 
   <export>
     <rocon_app>rapps/rtsp_camera_relay/rtsp_camera_relay</rocon_app>
-    <rocon_app>rapps/rtsp_camera_remote/rtsp_camera_remote</rocon_app>
+    <rocon_app>rapps/video_teleop/video_teleop</rocon_app>
   </export>
 </package>
