@@ -13,6 +13,7 @@ Published under the GWTFPL - http://www.wtfpl.net
 I am in no way affiliated with the Philips organization.
 
 Modification by dwlee
+- Delete config file writer
 - Create the exception.py and move the exception class
 - Add the "reachable" flag.
     Possible to get the each bulb validation.
@@ -21,7 +22,6 @@ Modification by dwlee
 '''
 
 import json
-import os
 import platform
 import sys
 import socket
@@ -410,12 +410,6 @@ class Bridge(object):
         username : string, optional
 
         """
-
-        if os.access(os.getenv(USER_HOME), os.W_OK):
-            self.config_file_path = os.path.join(
-                os.getenv(USER_HOME), '.python_hue')
-        else:
-            self.config_file_path = os.path.join(os.getcwd(), '.python_hue')
 
         self.ip = ip
         self.username = "newdeveloper"
