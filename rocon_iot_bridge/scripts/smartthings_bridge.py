@@ -16,11 +16,8 @@ class SmartThingsConnector(Connector):
     }
 
     def __init__(self):
-        self._address = rospy.get_param('~target_address')
-        self._port = rospy.get_param('~target_port')
-        self._configuration_file = rospy.get_param('~target_configuration_file') 
+        self._configuration_file = rospy.get_param('~target_configuration_file')
         self._load_configuration()
-
 
     def _load_configuration(self):
         with open(filename) as f:
@@ -43,8 +40,6 @@ class SmartThingsConnector(Connector):
         print(resp.json())
 
     def request_configuration_update(self, config):
-        address = config['address']
-        port = config['port']
 
         request_url = "%s/%s"%(self._endpoint_url, self._API['UPDATE_CONFIG'])
         header = { "Authorization": "Bearer %s" % access_token,}

@@ -1,0 +1,11 @@
+<launch>
+  <arg name="address"                   default=""/>
+  <arg name="port"                      default=""/>
+  <arg name="target_configuration_file" default=""/>
+
+  <node name="smartthings_bridge"   type="smartthings_bridge.py"  pkg="rocon_iot_bridge">
+    <param name="address"                     value="$(arg address)"/>
+    <param name="port"                        value="$(arg port)"/>
+    <param name="target_configuration_file"   value="$(arg target_configuration_file)"/>
+  </node>
+</launch>
