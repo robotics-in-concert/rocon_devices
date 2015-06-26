@@ -72,15 +72,10 @@ mappings {
       ]
     }
 
-    path("/get_configuration") {
+    path("/configuration") {
       action: [
-        GET: "_get_config"
-      ]
-    }
-
-    path("/update_paired_uri") {
-      action: [
-        POST: "_update_paired_uri"
+        GET: "_get_config",
+        PUT: "_set_config"
       ]
     }
 }
@@ -90,8 +85,9 @@ mappings {
  */
 def installed() {
     _event_subscribe()
-
     _set_paired_uri("")
+    
+    log.debug "Started"
 }
 
 /*
@@ -103,6 +99,7 @@ def updated()
     log.debug "updated"
     unsubscribe()
     _event_subscribe()
+    _set_paired_uri("")
 }
 
 /* --- event section --- */
@@ -149,24 +146,19 @@ def _all_types()
 def _get_config()
 {
   def resp = []
-  uri = _get_paired_uri()
+  def uri = _get_paired_uri()
 
   resp << ['paired_uri': uri]
   return resp 
 }
 
 
-def _update_paired_uri()
+def _set_config()
 {
-  def uri = request.JSON?.uri
+  def uri = params?.uri
 
   log.debug "_update_paired_uri : received uri=${uri}"
   _set_paired_uri(uri)
-
-  def resp = []
-  resp << [success: true, current_uri: uri]
-
-  return resp 
 }
 
 

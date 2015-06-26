@@ -30,7 +30,12 @@ class RoconIOTBridge(object):
     def spin(self):
         self._init_flask()
         self._init_ros_api()
-        self._connector().init()
+
+        subscription_uri = "%s:%s/devices"
+        self.loginfo(subscription_uri)
+        resp = self._connector().init({uri:subscription_uri})
+        if resp:
+            self.loginfo(str(resp))
         rospy.on_shutdown(self._shutdown_flask)
         self._app.run(host=self._address, port=self._port, debug=False)
 

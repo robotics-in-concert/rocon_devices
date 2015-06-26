@@ -11,7 +11,7 @@ from rocon_iot_bridge import RoconIOTBridge, Connector
 class SmartThingsConnector(Connector):
 
     _API = {
-        'UPDATE_CONFIG' : 'update_config',
+        'UPDATE_CONFIG' : 'configuration',
         'GET_DEVICE_LIST' : 'get_device_list',
     }
 
@@ -28,7 +28,9 @@ class SmartThingsConnector(Connector):
         self._endpoint_url = self._get_endpoint_url()
 
         if config:
-            self.request_configuration_update(config)
+            return self.request_configuration_update(config)
+        else
+            return None 
 
     def call_get_device_list(self):
         request_url = "%s/%s"%(url, self._API['GET_DEVICE_LIST'])
@@ -40,15 +42,12 @@ class SmartThingsConnector(Connector):
         print(resp.json())
 
     def request_configuration_update(self, config):
-
         request_url = "%s/%s"%(self._endpoint_url, self._API['UPDATE_CONFIG'])
         header = { "Authorization": "Bearer %s" % access_token,}
-
-        resp = requests.get(url=request_url, params=config, headers=header)
-        print(resp.json())
-
+        resp = requests.put(url=request_url, params=config, headers=header)
+        
         # Return true or false
-        return
+        return resp
 
     def convert_post_to_msg(self, post):
         pass                                    
@@ -68,9 +67,12 @@ class SmartThingsConnector(Connector):
 
 if __name__ == '__main__':
     rospy.init_node('smartthings_bridge')
+    
+    address = rospy.get_param('~address')
+    port    = rospy.get_param('~port')
 
     connector = SmartThingsConnector()
-    bridge = RoconIOTBridge(connector)
+    bridge = RoconIOTBridge(address, port, connector)
 
     bridge.loginfo("Initilialised")
     bridge.spin()
