@@ -21,6 +21,12 @@ class Connector(object):
         pass
 
     @abstractmethod
+    def close(self):
+        """
+        """
+        pass
+
+    @abstractmethod
     def call_get_device_list(self):
         """
           Request target engine to receive all available device list

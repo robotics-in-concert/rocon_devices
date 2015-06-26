@@ -51,6 +51,10 @@ class RoconIOTBridge(object):
         while not rospy.is_shutdown():
             rospy.sleep(1.0)
 
+        resp = self._connector.close()
+        if resp:
+            self.loginfo(str(resp))
+
         result, e = self._shutdown_server()
         self.loginfo(e)
         self._server_thread.join(1)

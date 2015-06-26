@@ -15,6 +15,7 @@ class SmartThingsConnector(Connector):
     _API = {
         'UPDATE_CONFIG' : 'configuration',
         'GET_DEVICE_LIST' : 'get_device_list',
+        'RESET': 'reset'
     }
 
     def __init__(self):
@@ -34,6 +35,9 @@ class SmartThingsConnector(Connector):
         else:
             return None 
 
+    def close(self):
+        return self._request_reset()
+
     def call_get_device_list(self):
         request_url = "%s/%s"%(url, self._API['GET_DEVICE_LIST'])
         params = {}
@@ -41,7 +45,16 @@ class SmartThingsConnector(Connector):
           "Authorization": "Bearer %s" % self._config['access_token'],
         }
         resp = requests.get(url=request_url, params=params, headers=header)
-        print(resp.json())
+
+    def _request_reset(self):
+        request_url = "%s/%s"%(self._endpoint_url, self._API['RESET'])
+        params = {}
+        header =  {
+          "Authorization": "Bearer %s" % self._config['access_token'],
+        }
+        resp = requests.put(url=request_url, params={}, headers=header)
+        # Return true or false
+        return resp
 
     def request_configuration_update(self, config):
         request_url = "%s/%s"%(self._endpoint_url, self._API['UPDATE_CONFIG'])
