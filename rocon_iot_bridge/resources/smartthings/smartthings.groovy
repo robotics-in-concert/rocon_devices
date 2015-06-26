@@ -3,7 +3,7 @@
  *  Original author : Davin Jane's IOTDB. Please refer IOTDB.org and https://github.com/dpjanes/iotdb-smartthings
  *
  *  Allow to receive device events via REST API 
- *
+ * 
  */
  
 definition(
@@ -18,8 +18,7 @@ definition(
     
 /* --- setup section --- */
 /*
- *  The user 
- *  Make sure that if you change anything related to this in the code
+ *  The user make sure that if you change anything related to this in the code
  *  that you update the preferences in your installed apps.
  *
  *  Note that there's a SmartThings magic that's _required_ here,
@@ -50,7 +49,7 @@ input "d_thermostatFanMode", "capability.thermostatFanMode", title: "thermostatF
 input "d_thermostatHeatingSetpoint", "capability.thermostatHeatingSetpoint", title: "thermostatHeatingSetpoint", multiple: true
 input "d_thermostatMode", "capability.thermostatMode", title: "thermostatMode", multiple: true
 input "d_thermostatSetpoint", "capability.thermostatSetpoint", title: "thermostatSetpoint", multiple: true
-//        input "d_threeAxis", "capability.threeAxis", title: "3 Axis", multiple: true
+input "d_threeAxis", "capability.threeAxis", title: "3 Axis", multiple: true
 input "d_threeAxisMeasurement", "capability.threeAxisMeasurement", title: "threeAxisMeasurement", multiple: true
 input "d_waterSensor", "capability.waterSensor", title: "waterSensor", multiple: true
 
@@ -67,16 +66,22 @@ temperature: 65 F
  *    be a PUT call on the ID to make this restful
  */
 mappings {
-    path("/:type") {
-        action: [
-            GET: "_api_list"
-        ]
+    path("/get_all_types") {
+      action: [
+        GET: "_all_types"
+      ]
     }
-    path("/:type/:id") {
-        action: [
-            GET: "_api_get",
-            PUT: "_api_put"
-        ]
+
+    path("/get_configuration") {
+      action: [
+        GET: "_get_config"
+      ]
+    }
+
+    path("/update_paired_uri") {
+      action: [
+        POST: "_update_paired_uri"
+      ]
     }
 }
 
@@ -85,6 +90,8 @@ mappings {
  */
 def installed() {
     _event_subscribe()
+
+    _set_paired_uri("")
 }
 
 /*
@@ -115,11 +122,10 @@ def _event_subscribe()
 
 /*
  *  This function is called whenever something changes.
- *  Right now it just 
  */
 def _on_event(evt)
 {
-    log.info "_on_event XXX event.id=${evt?.id} event.deviceId=${evt?.deviceId} event.isStateChange=${evt?.isStateChange} event.name=${evt?.name}"
+    log.debug "_on_event XXX event.id=${evt?.id} event.deviceId=${evt?.deviceId} event.isStateChange=${evt?.isStateChange} event.name=${evt?.name}"
     
     def dt = _device_and_type_for_event(evt)
     if (!dt) {
@@ -130,109 +136,79 @@ def _on_event(evt)
     def jd = _device_to_json(dt.device, dt.type)
     log.debug "_on_event deviceId=${jd}"
 
-    _send_mqtt(dt.device, dt.type, jd)
+    _inform_partner(dt.device, dt.type, jd)
 
 }
 
 /* --- API section --- */
-def _api_list()
+def _all_types()
 {
-    _devices_for_type(params.type).collect{
-        _device_to_json(it, params.type)
-    }
+  _dtd()
 }
 
-def _api_put()
+def _get_config()
 {
-    def devices = _devices_for_type(params.type)
-    def device = devices.find { it.id == params.id }
-    if (!device) {
-        httpError(404, "Device not found")
-    } else {
-        _device_command(device, params.type, request.JSON)
-    }
+  def resp = []
+  uri = _get_paired_uri()
+
+  resp << ['paired_uri': uri]
+  return resp 
 }
 
-def _api_get()
+
+def _update_paired_uri()
 {
-    def devices = _devices_for_type(params.type)
-    def device = devices.find { it.id == params.id }
-    if (!device) {
-        httpError(404, "Device not found")
-    } else {
-        _device_to_json(device, params.type)
-    }
+  def uri = request.JSON?.uri
+
+  log.debug "_update_paired_uri : received uri=${uri}"
+  _set_paired_uri(uri)
+
+  def resp = []
+  resp << [success: true, current_uri: uri]
+
+  return resp 
 }
 
-void _api_update()
-{
-    _do_update(_devices_for_type(params.type), params.type)
-}
 
 /*
- *  I don't know what this does but it seems to be needed
  */
-def deviceHandler(evt) {
-}
+def deviceHandler(evt) {}
 
-/* --- communication section: not done --- */
 
-/*
- *  An example of how to get PushingBox.com to send a message
- */
-def _send_pushingbox() {
-    log.debug "_send_pushingbox called";
+def _inform_partner(device, device_type, deviced) {
+  
+  def uri = _get_paired_uri() 
+  if (!uri) {
+    log.debug "_inform_partner : uri has not been set yet"
+    return
+  }
 
-    def devid = "XXXX"
-    def messageText = "Hello_World"
+  def now = Calendar.instance
+  def date = now.time
+  def millis = date.time
+  def sequence = millis
+  def isodatetime = deviced?.value?.timestamp
+  
+  def topic = "st/${device_type}/${deviced.id}".toString()
+  
+  def headers = [:]
+  def body = [
+      "topic": topic,
+      "payloadd": deviced?.value,
+      "timestamp": isodatetime,
+      "sequence": sequence,
+  ]
 
-    httpGet("http://api.pushingbox.com/pushingbox?devid=${devid}&message=xxx_xxx")
-}
+  def params = [
+      uri: uri,
+      headers: headers,
+      body: body
+  ]
 
-/*
- *  Send information the the IOTDB MQTT Bridge
- *  See https://iotdb.org/playground/mqtt/bridge for documentation
- */
-def _send_mqtt(device, device_type, deviced) {
-	def settings = _settings()
-    // log.debug "_send_mqtt: iotdb_api_username=${settings.iotdb_api_username},iotdb_api_key=${settings.iotdb_api_key}"
-    
-    if (!settings.iotdb_api_username || !settings.iotdb_api_key) {
-        return
-    }
+  log.debug "_inform_partner : Sending"
 
-    log.debug "_send_mqtt called";
+  httpPostJson(params) { log.debug "_inform_partner :response=${response}"}
 
-    def now = Calendar.instance
-    def date = now.time
-    def millis = date.time
-    def sequence = millis
-    def isodatetime = deviced?.value?.timestamp
-    
-    def digest = "${settings.iotdb_api_key}/${settings.iotdb_api_username}/${isodatetime}/${sequence}".toString();
-    def hash = digest.encodeAsMD5();
-    
-    def topic = "st/${device_type}/${deviced.id}".toString()
-    
-    def uri = "https://iotdb.org/playground/mqtt/bridge"
-    def headers = [:]
-    def body = [
-        "topic": topic,
-        "payloadd": deviced?.value,
-        "timestamp": isodatetime,
-        "sequence": sequence,
-        "signed": hash,
-        "username": settings.iotdb_api_username
-    ]
-
-    def params = [
-        uri: uri,
-        headers: headers,
-        body: body
-    ]
-
-    log.debug "_send_mqtt: params=${params}"
-    httpPutJson(params) { log.debug "_send_mqtt: response=${response}" }
 }
 
 
@@ -276,6 +252,15 @@ def _device_and_type_for_event(evt)
             }
         }
     }
+}
+
+private _set_paired_uri(uri) {
+  atomicState.paired_uri = uri
+}
+
+private _get_paired_uri()
+{
+  return atomicState.paired_uri
 }
 
 /**
@@ -352,8 +337,5 @@ private _device_to_json(device, type) {
         vd['z'] = s?.xyzValue?.z
     }
     
-	def settings = _settings()
-    jd['mqtt'] = "tcp://mqtt.iotdb.org/u/${settings.iotdb_api_username}/st/${type}/${device.id}"
-
     return jd
 }
