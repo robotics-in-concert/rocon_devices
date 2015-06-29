@@ -23,20 +23,28 @@ class SmartThingsConnector(Connector):
 
     def __init__(self):
         self._configuration_file = rospy.get_param('~target_configuration_file')
-        self._load_configuration(self._configuration_file)
 
     def _load_configuration(self, filename):
         with open(filename) as f:
             config = json.load(f) 
         self._config = config
 
+        if not 'access_token' in self._config:
+            return False
+        else:
+            return True
+
     def init(self, config=None):
+
+        if not self._load_configuration(self._configuration_file):
+            return None, "Error while loading configuration : %s"%self._config
+
         self._endpoint_url = self._get_endpoint_url()
 
         if config:
-            return self.request_configuration_update(config)
+            return self.request_configuration_update(config), "Success"
         else:
-            return None 
+            return None, "No configuration is given"
 
     def close(self):
         return self._request_reset()

@@ -1,0 +1,9 @@
+{
+  "api": "",
+  "api_location": "graph.api.smartthings.com",
+  "client_id": "",
+  "client_secret": "",
+  "expires_in": 1576799999,
+  "scope": "app",
+  "token_type": "bearer"
+}

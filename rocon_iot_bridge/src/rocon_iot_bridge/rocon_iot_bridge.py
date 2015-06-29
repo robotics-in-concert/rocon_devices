@@ -45,9 +45,12 @@ class RoconIOTBridge(object):
 
         subscription_uri = "%s:%s/devices"%(self._global_address, self._global_port)
         self.loginfo("initialising with %s"%subscription_uri)
-        resp = self._connector.init({"address": self._global_address, "port": self._global_port, "api":"devices"})
+        resp, message = self._connector.init({"address": self._global_address, "port": self._global_port, "api":"devices"})
         if resp:
             self.loginfo(str(resp))
+        else:
+            self.logerr(message)
+            return
 
         self.loginfo("Starting bridge server...")
         self._server_thread.start()
@@ -94,6 +97,8 @@ class RoconIOTBridge(object):
         else:
             return (True, 'server shutdown success!!')
 
-
     def loginfo(self, msg):
         rospy.loginfo("%s : %s"%(rospy.get_name(), msg))
+
+    def logerr(self, msg):
+        rospy.logerr("%s : %s"%(rospy.get_name(), msg))

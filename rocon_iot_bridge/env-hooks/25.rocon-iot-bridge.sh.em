@@ -3,7 +3,7 @@
 : ${SMARTTHINGS_BRIDGE_LOCAL_PORT:=5566}
 : ${SMARTTHINGS_BRIDGE_GLOBAL_ADDRESS:=localhost}
 : ${SMARTTHINGS_BRIDGE_GLOBAL_PORT:=5566}
-: ${SMARTTHINGS_TARGET_CONFIG:=`rospack find rocon_iot_bridge`/resources/smartthings/default.yaml}
+: ${SMARTTHINGS_TARGET_CONFIG:=`rospack find rocon_iot_bridge`/resources/smartthings/default.json}
 
 export SMARTTHINGS_BRIDGE_LOCAL_ADDRESS
 export SMARTTHINGS_BRIDGE_LOCAL_PORT
