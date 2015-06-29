@@ -4,6 +4,7 @@
 #   https://raw.github.com/robotics-in-concert/rocon_devices/license/LICENSE
 #
 
+import copy
 import rospy
 import requests
 import threading
@@ -22,9 +23,13 @@ class RoconIOTBridge(object):
         self._global_port = global_port
         self._connector = connector
 
+        self._device_event = rocon_device_msgs.Devices()
+        self._is_device_event_ready = False
+        self._lock = threading.Lock()
+
 
     def _init_flask(self):
-        self._app.add_url_rule('/index', view_func=self._index, methods=['GET'])
+        self._app.add_url_rule('/pong', view_func=self._pong, methods=['GET'])
         self._app.add_url_rule('/devices', view_func=self._received_devices_event, methods=['POST'])
         self._app.add_url_rule(rule='/shutdown', view_func=self._shutdown_flask)
 
@@ -32,7 +37,7 @@ class RoconIOTBridge(object):
 
     def _init_ros_api(self):
         self._srv_get_device_list = rospy.Service('get_device_list', rocon_device_srvs.GetDeviceList, self._process_get_device_list)
-        self._pub_device_event = rospy.Publisher('devices', rocon_device_msgs.Devices, queue_size=2)
+        self._pub_device_event = rospy.Publisher('devices', rocon_device_msgs.Devices, queue_size=10)
 
     def spin(self):
         self._init_flask()
@@ -54,23 +59,24 @@ class RoconIOTBridge(object):
         resp = self._connector.close()
         if resp:
             self.loginfo(str(resp))
-
         result, e = self._shutdown_server()
         self.loginfo(e)
         self._server_thread.join(1)
 
     def _received_devices_event(self):
-        j = request.json
-        self.loginfo("Received : %s"%str(j))
-
-        return "Hola"
+        req = request.json
+        self.loginfo("Received : %s"%str(req))
+        msg = self._connector.convert_post_to_devices_msg(req)
+        self._pub_device_event.publish(msg)
+        return 'Success'
 
     def _process_get_device_list(self, req):
-        return rocon_device_srvs.GetDeviceListResponse()
+        devices = self._connector.call_get_device_list()
+        return rocon_device_srvs.GetDeviceListResponse(devices)
 
-    def _index(self):
-        self.loginfo("index!")
-        return "Index!"
+    def _pong(self):
+        self.loginfo("pong!")
+        return "pong!"
 
     def _shutdown_flask(self, methods=['GET']):
         self.loginfo('shutdown requested')

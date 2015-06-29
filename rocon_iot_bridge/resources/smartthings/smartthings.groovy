@@ -66,7 +66,7 @@ temperature: 65 F
  *    be a PUT call on the ID to make this restful
  */
 mappings {
-    path("/get_all_types") {
+    path("/get_device_list") {
       action: [
         GET: "_all_types"
       ]
@@ -76,6 +76,11 @@ mappings {
       action: [
         GET: "_get_config",
         PUT: "_set_config"
+      ]
+    }
+    path("/reset") {
+      action: [
+        PUT: "_reset"
       ]
     }
 }
@@ -99,7 +104,7 @@ def updated()
     log.debug "updated"
     unsubscribe()
     _event_subscribe()
-    _set_paired_uri("")
+    _set_paired_uri()
 }
 
 /* --- event section --- */
@@ -140,6 +145,7 @@ def _on_event(evt)
 /* --- API section --- */
 def _all_types()
 {
+  log.debug "_get_device_list : received request"
   _dtd()
 }
 
@@ -149,16 +155,27 @@ def _get_config()
   def uri = _get_paired_uri()
 
   resp << ['paired_uri': uri]
+  log.debug "_get_config : ${resp} "
   return resp 
 }
 
 
 def _set_config()
 {
-  def uri = params?.uri
-
-  log.debug "_update_paired_uri : received uri=${uri}"
+  def address = params?.address
+  def port = params?.port
+  def api = params?.api
+  def uri = "http://${address}:${port}/${api}"
+  log.debug "_update_paired_uri : received address=${uri}"
   _set_paired_uri(uri)
+
+  def resp = '[success: true, current_uri: uri]'
+}
+
+def _reset()
+{
+  log.debug "Resetting configuration"
+  _set_paired_uri('')
 }
 
 
@@ -181,12 +198,12 @@ def _inform_partner(device, device_type, deviced) {
   def sequence = millis
   def isodatetime = deviced?.value?.timestamp
   
-  def topic = "st/${device_type}/${deviced.id}".toString()
+  def topic = "${deviced.label}/${device_type}/${deviced.id}".toString()
   
-  def headers = [:]
+  def headers = ["Content-Type" : "application/json", "Accept": "text/plain"]
   def body = [
       "topic": topic,
-      "payloadd": deviced?.value,
+      "data": deviced?.value,
       "timestamp": isodatetime,
       "sequence": sequence,
   ]
@@ -197,9 +214,9 @@ def _inform_partner(device, device_type, deviced) {
       body: body
   ]
 
-  log.debug "_inform_partner : Sending"
+  log.debug "_inform_partner : Sending ${params}"
 
-  httpPostJson(params) { log.debug "_inform_partner :response=${response}"}
+  httpPostJson(params) {}
 
 }
 
@@ -253,33 +270,6 @@ private _set_paired_uri(uri) {
 private _get_paired_uri()
 {
   return atomicState.paired_uri
-}
-
-/**
- *  Do a device command
- */
-private _device_command(device, type, jsond) {
-    if (!device) {
-        return;
-    }
-    if (!jsond) {
-        return;
-    }
-    
-    if (type == "switch") {
-        def n = jsond['switch']
-        if (n == -1) {
-            def o = device.currentState('switch')?.value
-            n = ( o != 'on' )
-        }
-        if (n) {
-            device.on()
-        } else {
-            device.off()
-        }
-    } else {
-        log.debug "_device_command: device type=${type} doesn't take commands"
-    }
 }
 
 /*

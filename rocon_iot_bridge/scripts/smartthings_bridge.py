@@ -8,6 +8,8 @@
 import json
 import requests
 import rospy
+import rocon_std_msgs.msg as rocon_std_msgs
+import rocon_device_msgs.msg as rocon_device_msgs
 from rocon_iot_bridge import RoconIOTBridge, Connector
 
 class SmartThingsConnector(Connector):
@@ -15,6 +17,7 @@ class SmartThingsConnector(Connector):
     _API = {
         'UPDATE_CONFIG' : 'configuration',
         'GET_DEVICE_LIST' : 'get_device_list',
+        'LOG':  'log',
         'RESET': 'reset'
     }
 
@@ -39,12 +42,31 @@ class SmartThingsConnector(Connector):
         return self._request_reset()
 
     def call_get_device_list(self):
-        request_url = "%s/%s"%(url, self._API['GET_DEVICE_LIST'])
+        request_url = "%s/%s"%(self._endpoint_url, self._API['GET_DEVICE_LIST'])
         params = {}
         header =  {
           "Authorization": "Bearer %s" % self._config['access_token'],
         }
         resp = requests.get(url=request_url, params=params, headers=header)
+        dev_resp = resp.json()
+
+        devices = []
+        for dev_type, devs in dev_resp.items():
+            if devs:
+                for d in devs:
+                    dev_msg = self._convert_to_device_msg(dev_type, d)
+                    devices.append(dev_msg)
+        return devices
+
+    def _convert_to_device_msg(self, d_type, d):
+        m = rocon_device_msgs.Device()
+        m.label = str(d['label'])
+        m.uuid  = str(d['id'])
+        m.type  = str(d_type)
+        m.data  = []
+
+        return m
+
 
     def _request_reset(self):
         request_url = "%s/%s"%(self._endpoint_url, self._API['RESET'])
@@ -64,8 +86,22 @@ class SmartThingsConnector(Connector):
         # Return true or false
         return resp
 
-    def convert_post_to_msg(self, post):
-        pass                                    
+    def convert_post_to_devices_msg(self, post):
+        device = post['topic']
+        device_data = post['data']
+        dev_label, dev_type, dev_uuid = device.split("/")
+
+        dev = rocon_device_msgs.Device()
+        dev.label = str(dev_label)
+        dev.type  = str(dev_type)
+        dev.uuid  = str(dev_uuid)
+        dev.data  = [rocon_std_msgs.KeyValue(str(key), str(value)) for key, value in device_data.items()]
+
+        msg = rocon_device_msgs.Devices()
+        msg.devices = []
+        msg.devices.append(dev)
+
+        return msg
 
     def _get_endpoint_url(self):
         endpoints_url = self._config['api']

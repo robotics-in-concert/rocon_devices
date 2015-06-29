@@ -37,7 +37,7 @@ class Connector(object):
         pass
 
     @abstractmethod
-    def convert_post_to_msg(self, post):
+    def convert_post_to_devices_msg(self, post):
         """
           It converts te target engine posts device events into ros msg
           
