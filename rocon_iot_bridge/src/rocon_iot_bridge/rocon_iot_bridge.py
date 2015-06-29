@@ -29,7 +29,7 @@ class RoconIOTBridge(object):
 
 
     def _init_flask(self):
-        self._app.add_url_rule('/pong', view_func=self._pong, methods=['GET'])
+        self._app.add_url_rule('/ping', view_func=self._pong, methods=['GET'])
         self._app.add_url_rule('/devices', view_func=self._received_devices_event, methods=['POST'])
         self._app.add_url_rule(rule='/shutdown', view_func=self._shutdown_flask)
 
@@ -71,6 +71,7 @@ class RoconIOTBridge(object):
         self.loginfo("Received : %s"%str(req))
         msg = self._connector.convert_post_to_devices_msg(req)
         self._pub_device_event.publish(msg)
+        self.loginfo("Sent Msg : %s"%str(msg))
         return 'Success'
 
     def _process_get_device_list(self, req):
