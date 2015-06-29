@@ -113,7 +113,7 @@ class SmartThingsConnector(Connector):
 
     def _get_endpoint_url(self):
         endpoints_url = self._config['api']
-        endpoints_paramd = {
+        endpointZZZs_paramd = {
             "access_token": self._config['access_token']
         }
 
