@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>rocon_iot_bridge</name>
+  <version>0.0.0</version>
+  <description>
+    This package helps to communicate iot platforms like ninjablock and smartthings
+  </description>
+
+  <maintainer email="jihoonlee.in@gmail.com">Jihoon Lee</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://wiki.ros.org/rocon_iot_bridge</url>
+
+  <author>Dongwook Lee</author>
+  <author>Jihoon Lee</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>python-flask</run_depend>
+  <run_depend>rospy</run_depend>
+
+  <export>
+  </export>
+</package>
