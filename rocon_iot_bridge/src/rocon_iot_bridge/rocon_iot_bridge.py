@@ -71,7 +71,6 @@ class RoconIOTBridge(object):
         self.loginfo("Received : %s"%str(req))
         msg = self._connector.convert_post_to_devices_msg(req)
         self._pub_device_event.publish(msg)
-        self.loginfo("Sent Msg : %s"%str(msg))
         return 'Success'
 
     def _process_get_device_list(self, req):
