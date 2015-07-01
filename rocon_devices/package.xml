@@ -17,6 +17,9 @@
   <run_depend>rocon_python_hue</run_depend>
   <run_depend>rocon_hue</run_depend>
   <run_depend>rocon_rtsp_camera_relay</run_depend>
+  <run_depend>rocon_iot_bridge</run_depend>
+  <run_depend>rocon_ninjablock_bridge</run_depend>
+  <run_depend>rocon_smartthings_bridge</run_depend>
   <export>
     <metapackage/>
   </export>
