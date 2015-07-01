@@ -29,7 +29,7 @@ class RoconIOTBridge(object):
 
 
     def _init_flask(self):
-        self._app.add_url_rule('/pong', view_func=self._pong, methods=['GET'])
+        self._app.add_url_rule('/ping', view_func=self._pong, methods=['GET'])
         self._app.add_url_rule('/devices', view_func=self._received_devices_event, methods=['POST'])
         self._app.add_url_rule(rule='/shutdown', view_func=self._shutdown_flask)
 

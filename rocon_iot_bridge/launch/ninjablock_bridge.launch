@@ -1,0 +1,15 @@
+<launch>
+  <arg name="local_address"                     default="$(env NINJABLOCK_BRIDGE_LOCAL_ADDRESS)"/>
+  <arg name="local_port"                        default="$(env NINJABLOCK_BRIDGE_LOCAL_PORT)"/>
+  <arg name="global_address"                    default="$(env NINJABLOCK_BRIDGE_GLOBAL_ADDRESS)"/>
+  <arg name="global_port"                       default="$(env NINJABLOCK_BRIDGE_GLOBAL_PORT)"/>
+  <arg name="target_configuration_file" default="$(env NINJABLOCK_TARGET_CONFIG)"/>
+
+  <node name="ninjablock_bridge"   type="ninjablock_bridge.py"  pkg="rocon_iot_bridge">
+    <param name="local_address"                     value="$(arg local_address)"/>
+    <param name="local_port"                        value="$(arg local_port)"/>
+    <param name="global_address"                     value="$(arg global_address)"/>
+    <param name="global_port"                        value="$(arg global_port)"/>
+    <param name="target_configuration_file"   value="$(arg target_configuration_file)"/>
+  </node>
+</launch>
