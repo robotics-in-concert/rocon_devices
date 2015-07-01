@@ -9,7 +9,6 @@
 
   <license>BSD</license>
 
-
   <url type="website">http://wiki.ros.org/rocon_ninjablock_bridge</url>
 
   <author>Dongwook Lee</author>
@@ -21,4 +20,5 @@
   <run_depend>rospy</run_depend>
   <run_depend>rocon_std_msgs</run_depend>
   <run_depend>rocon_device_msgs</run_depend>
+
 </package>
