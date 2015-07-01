@@ -1,0 +1,12 @@
+<launch>  
+
+  <include file="$(find rocon_ninjablock_bridge)/launch/ninjablock_bridge.launch"></include>
+  
+  <arg name="time_interval"  default= "1"/> <!-- reset time for validation detected motion [min]-->
+  <arg name="rooms"  default= ""/> 
+
+  <node pkg="concert_demo_rapps" name="empty_room_checker" type="room_checker.py" output="screen">
+     <param name="time_interval" value="$(arg time_interval)"/>
+     <rosparam param="rooms" subst_value="True">$(arg rooms)</rosparam>
+  </node>
+</launch>

@@ -9,7 +9,6 @@
 
   <license>BSD</license>
 
-
   <url type="website">http://wiki.ros.org/rocon_ninjablock_bridge</url>
 
   <author>Dongwook Lee</author>
@@ -21,4 +20,10 @@
   <run_depend>rospy</run_depend>
   <run_depend>rocon_std_msgs</run_depend>
   <run_depend>rocon_device_msgs</run_depend>
+  <run_depend>concert_demo_rapps</run_depend>
+  <run_depend>room_checker_msgs</run_depend>
+
+  <export>
+    <rocon_app>rapps/room_checker_ninjablock/room_checker_ninjablock.rapp</rocon_app>
+  </export>
 </package>
