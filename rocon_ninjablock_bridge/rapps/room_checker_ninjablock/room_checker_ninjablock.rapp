@@ -1,5 +1,0 @@
-display: Room Checker Ninjablock
-description: It is able to check empty room with motion detector sensor connected to ninja block iot bridge
-compatibility: rocon:/pc
-launch: room_checker_ninjablock.launch
-parent_name: concert_demo_rapps/room_checker

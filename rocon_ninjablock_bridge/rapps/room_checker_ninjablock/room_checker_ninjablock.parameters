@@ -1,5 +1,0 @@
-time_interval: 1
-rooms:
-    - meeting_room: "motion_detector_2"
-    - conf_room: "motion_detector_1"
-    - small_conf_room: "motion_detector_3"
