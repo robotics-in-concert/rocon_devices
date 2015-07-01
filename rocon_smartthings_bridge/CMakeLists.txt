@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(rocon_ninjablock_bridge)
+project(rocon_smartthings_bridge)
 
 find_package(catkin REQUIRED COMPONENTS
   rocon_iot_bridge
@@ -8,7 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_python_setup()
 catkin_package()
-catkin_add_env_hooks(25.rocon-ninjablock-bridge SHELLS sh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
+catkin_add_env_hooks(25.rocon-smartthings-bridge SHELLS sh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
 
 install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
