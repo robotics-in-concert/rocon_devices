@@ -18,6 +18,9 @@ catkin_package(
   DEPENDS OpenCV
 )
 
+catkin_add_env_hooks(25.rocon-rtsp-camera-relay SHELLS sh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
+
+
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}

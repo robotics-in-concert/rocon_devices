@@ -1,5 +1,5 @@
 <launch>
-  <arg name="video_stream_url"/>
+  <arg name="video_stream_url" default="$(env ROCON_RTSP_CAMERA_RELAY_URL)"/>
   <node pkg="rocon_rtsp_camera_relay" name="rtsp_camera_relay" type="rocon_rtsp_camera_relay_node">
     <param name="video_stream_url"    value="$(arg video_stream_url)"/>
   </node>
