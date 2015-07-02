@@ -5,10 +5,10 @@
   </node>
 
   <!-- Relaying topics to use as public interface -->
-  <node pkg="topic_tools" type="relay" name="relay_image" args="rtsp_camera_relay/image image" required="true">
+  <node pkg="topic_tools" type="throttle" name="throttle_image" args="messages rtsp_camera_relay/image/compressed 5" required="true">
     <param name="lazy" value="false"/>
   </node>
-  <node pkg="topic_tools" type="relay" name="relay_compressed_image" args="rtsp_camera_relay/compressed_image compressed_image" required="true">
+  <node pkg="topic_tools" type="relay" name="relay_compressed_image" args="rtsp_camera_relay/image/compressed_throttle /image_stream/compressed_image" required="true">
     <param name="lazy" value="false"/>
   </node>
 </launch>
