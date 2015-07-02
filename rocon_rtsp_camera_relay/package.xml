@@ -22,6 +22,6 @@
   <run_depend>std_msgs</run_depend>
 
   <export>
-    <rocon_app>rapps/image_stream/image_stream</rocon_app>
+    <rocon_app>rapps/image_stream/image_stream.rapp</rocon_app>
   </export>
 </package>
