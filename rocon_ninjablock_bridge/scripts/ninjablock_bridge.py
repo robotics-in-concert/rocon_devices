@@ -25,11 +25,13 @@ class NinjaBlockConnector(Connector):
     def __init__(self):
         self._configuration_file = rospy.get_param('~target_configuration_file')
         self._devices_msgs = []
+        self.type_table = {}
 
     def _load_configuration(self, filename):
         with open(filename) as f:
             config = json.load(f)
         self._config = config
+        print self._config
 
         if not 'access_token' in self._config:
             return False
@@ -54,6 +56,18 @@ class NinjaBlockConnector(Connector):
     def call_get_device_list(self):
         return self._get_device_list()
 
+    def _type_converter(self, device_label):
+        label = device_label.replace(' ', '_').lower()
+        type_table = self._config['type_table']
+        return_type = "none"
+        for tp in type_table.keys():
+            if return_type == "none":
+                for device_type in type_table[tp]:
+                    if device_type in label:
+                        return_type = tp
+                        break
+        return return_type
+
     def _convert_to_device_msgs(self, device_raw_data):
         msgs = []
         for dev_id in device_raw_data:
@@ -63,7 +77,7 @@ class NinjaBlockConnector(Connector):
                     sub_device = device['subDevices'][sdev_id]
                     dev = rocon_device_msgs.Device()
                     dev.label = sub_device['shortName']
-                    dev.type = device['device_type']
+                    dev.type = self._type_converter(dev.label)
                     dev.uuid = str(dev_id) + '_' + str(sub_device['data'])
                     dev.data.append(rocon_std_msgs.KeyValue('guid', str(dev_id)))
                     dev.data.append(rocon_std_msgs.KeyValue('data', ''))
