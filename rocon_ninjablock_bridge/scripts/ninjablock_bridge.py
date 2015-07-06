@@ -31,7 +31,6 @@ class NinjaBlockConnector(Connector):
         with open(filename) as f:
             config = json.load(f)
         self._config = config
-        print self._config
 
         if not 'access_token' in self._config:
             return False
