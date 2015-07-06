@@ -65,6 +65,7 @@ class NinjaBlockConnector(Connector):
                     dev.label = sub_device['shortName']
                     dev.type = device['device_type']
                     dev.uuid = str(dev_id) + '_' + str(sub_device['data'])
+                    dev.data.append(rocon_std_msgs.KeyValue('guid', str(dev_id)))
                     dev.data.append(rocon_std_msgs.KeyValue('data', ''))
                     msgs.append(dev)
             else:
@@ -73,6 +74,7 @@ class NinjaBlockConnector(Connector):
                 dev.type = device['device_type']
                 dev.uuid = str(dev_id)
                 dev.data.append(rocon_std_msgs.KeyValue('data', ''))
+                dev.data.append(rocon_std_msgs.KeyValue('guid', str(dev_id)))
                 msgs.append(dev)
         return msgs
 
@@ -140,19 +142,26 @@ class NinjaBlockConnector(Connector):
     def _request_register_callback(self, config):
         callback_url = 'http://%s:%s/devices' % (str(config['address']), str(config['port']))
         for dev_msg in self._devices_msgs:
-            dev_guid = dev_msg.uuid
-            request_url = "%s/%s?user_access_token=%s" % (self._endpoint_url, 'device/' + dev_guid + '/callback', self._config['access_token'])
-            data = '{"url":"' + callback_url + '"}'
-            headers = {'Content-Type': 'application/json', "Accept": "text/plain"}
-            if self._is_register_callback(dev_guid):
-                resp = requests.put(url=request_url, data=data, headers=headers)
+            dev_guid = ''
+            for dev_msg_data in dev_msg.data:
+                if dev_msg_data.key == 'guid':
+                    dev_guid = dev_msg_data.value
+                    break
+            if dev_guid == '':
+                continue
             else:
-                resp = requests.post(url=request_url, data=data, headers=headers)
-            if resp is not None and resp.status_code == 200:
-                result = json.loads(resp.text)
-                if 'result' in result.keys():
-                    if result['result'] == 0:
-                        return False, '%s callback url register fails' % dev_msg.label
+                request_url = "%s/%s?user_access_token=%s" % (self._endpoint_url, 'device/' + dev_guid + '/callback', self._config['access_token'])
+                data = '{"url":"' + callback_url + '"}'
+                headers = {'Content-Type': 'application/json', "Accept": "text/plain"}
+                if self._is_register_callback(dev_guid):
+                    resp = requests.put(url=request_url, data=data, headers=headers)
+                else:
+                    resp = requests.post(url=request_url, data=data, headers=headers)
+                if resp is not None and resp.status_code == 200:
+                    result = json.loads(resp.text)
+                    if 'result' in result.keys():
+                        if result['result'] == 0:
+                            return False, '%s callback url register fails' % dev_msg.label
         return True, 'Success'
 
     def _get_endpoint_url(self):
