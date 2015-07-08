@@ -7,7 +7,7 @@ A collection of device drivers involved in rocon
 
 For controlling PHILIPS hue by ros topic.
 
-First, connect the bridge in your local network. The user have to get the hue bridge ip. There are two option. 
+First, connect the bridge in your local network. The user have to get the hue bridge ip. There are two options. 
 * Visit [meethue](https://www.meethue.com/api/nupnp)
 * Ask your network manager
 
