@@ -2,8 +2,8 @@
 Changelog for package rocon_ninjablock_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.5 (2015-07-09)
+------------------
 * delete log
 * update type matching like smartthing and default json
 * fix register problem devices callback in ninjablock

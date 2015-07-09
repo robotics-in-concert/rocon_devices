@@ -2,8 +2,8 @@
 Changelog for package rocon_rtsp_camera_relay
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.5 (2015-07-09)
+------------------
 * remaining fixes `#51 <https://github.com/robotics-in-concert/rocon_devices/issues/51>`_
 * use env for url
 * add image stream rapp

@@ -2,8 +2,8 @@
 Changelog for package rocon_iot_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.5 (2015-07-09)
+------------------
 * separate out smartthings bridge
 * separate out ninjablock from iot bridge
 * migrate iot_bridge into device_tools

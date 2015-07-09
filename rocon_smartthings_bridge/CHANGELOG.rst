@@ -2,8 +2,8 @@
 Changelog for package rocon_smartthings_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.5 (2015-07-09)
+------------------
 * launch file update
 * separate out smartthings bridge
 * Contributors: Jihoon Lee
