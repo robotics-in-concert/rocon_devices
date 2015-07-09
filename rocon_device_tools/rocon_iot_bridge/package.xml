@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rocon_iot_bridge</name>
-  <version>0.0.0</version>
+  <version>0.0.4</version>
   <description>
     This package helps to communicate iot platforms like ninjablock and smartthings
   </description>
