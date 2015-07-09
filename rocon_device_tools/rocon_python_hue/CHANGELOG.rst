@@ -2,6 +2,11 @@
 Changelog for package rocon_python_hue
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* delete config file writer in phue
+* Contributors: dwlee
+
 0.0.4 (2015-06-15)
 ------------------
 

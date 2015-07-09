@@ -2,6 +2,11 @@
 Changelog for package rocon_devices
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update metapakcage
+* Contributors: Jihoon Lee
+
 0.0.4 (2015-06-15)
 ------------------
 

@@ -2,6 +2,13 @@
 Changelog for package rocon_rtsp_camera_relay
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* remaining fixes `#51 <https://github.com/robotics-in-concert/rocon_devices/issues/51>`_
+* use env for url
+* add image stream rapp
+* Contributors: Jihoon Lee
+
 0.0.4 (2015-06-15)
 ------------------
 * Merge branch 'indigo' into rename_rapp_launcher
