@@ -2,6 +2,11 @@
 Changelog for package rocon_smartthings_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add init py for ninjablock and smartthings
+* Contributors: Jihoon Lee
+
 0.0.5 (2015-07-09)
 ------------------
 * launch file update

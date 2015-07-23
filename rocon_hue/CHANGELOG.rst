@@ -2,6 +2,9 @@
 Changelog for package rocon_hue
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.5 (2015-07-09)
 ------------------
 * update ros spinning time
