@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rocon_ninjablock_bridge</name>
-  <version>0.0.5</version>
+  <version>0.0.6</version>
   <description>
     bridging the ninjablock devices and ROS
   </description>
