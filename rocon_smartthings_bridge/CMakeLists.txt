@@ -17,5 +17,5 @@ install(DIRECTORY resources
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 install(PROGRAMS
-  scripts/ninjablock_bridge.py
+  scripts/smartthings_bridge.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
