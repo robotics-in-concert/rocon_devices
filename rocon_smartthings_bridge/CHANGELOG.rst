@@ -2,8 +2,8 @@
 Changelog for package rocon_smartthings_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.7 (2015-07-28)
+------------------
 * fix Cmake
 * Contributors: Jihoon Lee
 

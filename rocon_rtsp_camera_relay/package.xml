@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rocon_rtsp_camera_relay</name>
-  <version>0.0.6</version>
+  <version>0.0.7</version>
   <description>
     RTSP camera relay node converts rtsp camera stream from ip camera to ros image message
   </description>
