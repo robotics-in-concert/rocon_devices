@@ -2,6 +2,9 @@
 Changelog for package rocon_rtsp_camera_relay
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.6 (2015-07-23)
 ------------------
 
